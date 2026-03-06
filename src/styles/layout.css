@@ -1,0 +1,44 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  transition: var(--transition);
+}
+
+.main-content {
+  margin-top: 80px;
+  margin-bottom: 120px;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+
+
+.page-transition {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .main-content {
+    margin-top: 70px;
+    margin-bottom: 120px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .main-content {
+    margin-top: 60px;
+    margin-bottom: 100px;
+  }
+}

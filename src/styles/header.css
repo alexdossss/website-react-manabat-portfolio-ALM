@@ -1,0 +1,153 @@
+.upper-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background-color: black;
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 40px;
+  z-index: 1000;
+  transition: var(--transition);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.logo h1 {
+  font-size: 24px;
+  color: var(--accent-color);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+.social-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.social-link {
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--bg-secondary);
+  transition: var(--transition);
+}
+
+.social-link:hover {
+  color: var(--accent-color);
+  background-color: var(--accent-light);
+  transform: translateY(-2px);
+}
+
+.social-link svg {
+  stroke-width: 1.5;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.theme-toggle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.theme-toggle:hover {
+  background-color: var(--accent-light);
+  color: var(--accent-color);
+}
+
+.download-btn {
+  padding: 8px 20px;
+  background-color: var(--accent-color);
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: .75rem;
+  transition: var(--transition);
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.download-btn:hover {
+  background-color: var(--accent-light);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .upper-header {
+    height: 70px;
+    padding: 0 20px;
+  }
+
+  .header-left {
+    gap: 20px;
+  }
+
+  .logo h1 {
+    font-size: 20px;
+  }
+
+  .social-links {
+    gap: 12px;
+  }
+
+  .social-link {
+    width: 28px;
+    height: 28px;
+  }
+
+  .download-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .upper-header {
+    height: 60px;
+    padding: 0 16px;
+  }
+
+  .header-left {
+    gap: 12px;
+  }
+
+  .logo h1 {
+    font-size: 18px;
+  }
+
+  .social-links {
+    gap: 8px;
+  }
+
+  .download-btn {
+    display: none;
+  }
+}
