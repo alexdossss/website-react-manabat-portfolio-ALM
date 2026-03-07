@@ -1,53 +1,118 @@
-import React from 'react';
+import React, { useState, useRef, useCallback } from 'react';
+import CardSwap, { Card } from '../components/CardSwap';
 import '../styles/pages.css';
 
-const Experiences = () => {
-  const experiences = [
-    {
-      id: 1,
-      title: 'Internship',
-      company: 'A2K Group',
-      duration: '2024 - Present',
-      description: 'Working as an intern developer, contributing to web development projects and learning industry best practices from experienced mentors.',
-    },
-    {
-      id: 2,
-      title: 'Freelance Web Developer',
-      company: 'Self-Employed',
-      duration: '2022 - Present',
-      description: 'Developing responsive web applications for clients, focusing on UI/UX design and modern web technologies.',
-    },
-    {
-      id: 3,
-      title: 'Student Developer',
-      company: 'FreeCodeCamp',
-      duration: '2023 - 2024',
-      description: 'Completed Legacy Responsive Web Design certification, mastering HTML5, CSS3, and responsive design principles.',
-    },
-    {
-      id: 4,
-      title: 'Project Portfolio',
-      company: 'Various Clients',
-      duration: '2022 - Present',
-      description: 'Completed 6+ web development projects, delivering professional and user-friendly digital solutions.',
-    },
-  ];
+const Experiences = ({ projects }) => {
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  const infoSectionRef = useRef(null);
+  const cardSwapRef = useRef(null);
+
+  const handleCardChange = useCallback((cardIndex) => {
+    setCurrentCardIndex(cardIndex);
+  }, []);
+
+  const handleNext = () => {
+    cardSwapRef.current?.animateNext();
+  };
+
+  const handlePrevious = () => {
+    cardSwapRef.current?.animatePrevious();
+  };
+
+  const currentProject = projects[currentCardIndex];
 
   return (
     <div className="page experiences-page">
-      <h1>Work Experiences</h1>
-      <div className="experiences-timeline">
-        {experiences.map((exp) => (
-          <div key={exp.id} className="experience-card">
-            <div className="experience-marker"></div>
-            <div className="experience-content">
-              <h3>{exp.title}</h3>
-              <p className="experience-company">{exp.company}</p>
-              <p className="experience-duration">{exp.duration}</p>
-              <p className="experience-description">{exp.description}</p>
-            </div>
+      <section className="experiences-header">
+        <div className="header-h1-h2-layered">
+          <h1>DEVELOPMENT</h1>
+          <h2>Projects</h2>
+        </div>
+      </section>
+
+      <div className="experiences-card-swap-wrapper">
+        <div className="experiences-info-section" ref={infoSectionRef}>
+          <div className="experiences-info">
+            {currentProject && (
+              <div className="experience-item">
+                <h3 className="project-name">{currentProject.name}</h3>
+                
+                <div className="tech-stack">
+                  <p className="stack-label">Tech Stack</p>
+                  <div className="stack-tags">
+                    {currentProject.stack.map((tech, techIndex) => (
+                      <span key={techIndex} className="tech-badge">{tech}</span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="project-description-section">
+                  <p className="project-description">{currentProject.description}</p>
+                </div>
+
+                <div className="project-actions">
+                  <a href={currentProject.url} target="_blank" rel="noopener noreferrer" className="project-link-btn">
+                    View Project
+                  </a>
+                </div>
+              </div>
+            )}
           </div>
-        ))}
+
+          <div className="experiences-nav-controls">
+            <button 
+              className="experiences-nav-btn"
+              onClick={handlePrevious}
+              aria-label="Previous project"
+            >
+              ←
+            </button>
+            <div className="experiences-indicators">
+              {projects.map((_, index) => (
+                <button
+                  key={index}
+                  className={`experiences-indicator ${index === currentCardIndex ? 'active' : ''}`}
+                  onClick={() => setCurrentCardIndex(index)}
+                  aria-label={`Go to project ${index + 1}`}
+                />
+              ))}
+            </div>
+            <button 
+              className="experiences-nav-btn"
+              onClick={handleNext}
+              aria-label="Next project"
+            >
+              →
+            </button>
+          </div>
+        </div>
+
+        <div className="experiences-card-container">
+          <div style={{ height: '480px', position: 'relative' }}>
+            <CardSwap
+              ref={cardSwapRef}
+              cardDistance={50}
+              verticalDistance={60}
+              delay={10000}
+              pauseOnHover={true}
+              pauseOnHoverRefs={[infoSectionRef]}
+              width={580}
+              height={420}
+              activeIndex={currentCardIndex}
+              onCardChange={handleCardChange}
+            >
+              {projects.map((project) => (
+                <Card key={project.name}>
+                  <img 
+                    src={project.img} 
+                    alt={project.name}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                </Card>
+              ))}
+            </CardSwap>
+          </div>
+        </div>
       </div>
     </div>
   );

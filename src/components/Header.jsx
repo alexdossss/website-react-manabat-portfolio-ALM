@@ -54,7 +54,11 @@ const Header = () => {
         </div>
       </div>
       <div className="header-right">
-        <a href="#resume" className="download-btn">
+        <a 
+          href="/resume/Alexander_Manabat_Resume.pdf" 
+          download="Alexander_Manabat_Resume.pdf"
+          className="download-btn"
+        >
           Download Resume
         </a>
       </div>

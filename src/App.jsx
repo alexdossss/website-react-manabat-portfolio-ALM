@@ -14,6 +14,7 @@ import './styles/header.css';
 import './styles/navbar.css';
 import './styles/layout.css';
 import './styles/pages.css';
+import './styles/card-swap.css';
 
 function App() {
 
