@@ -12,29 +12,7 @@ const Home = ({ codingLanguages, projects, certificates, workExp }) => {
   const [currentCertIndex, setCurrentCertIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
 
-  // Helper function to get certificate logo
-  const getCertificateLogo = (title) => {
-    if (title.includes('FCC')) {
-      return '/images/certificates/fcc-logo.png';
-    } else if (title.includes('SIMPLILEARN')) {
-      return '/images/certificates/simplilearn-logo.png';
-    } else if (title.includes('HUBSPOT')) {
-      return '/images/certificates/hubspot-logo.png';
-    }
-    return '';
-  };
 
-  // Helper function to get organization name
-  const getOrganization = (title) => {
-    if (title.includes('FCC')) {
-      return 'FCC';
-    } else if (title.includes('SIMPLILEARN')) {
-      return 'SIMPLILEARN';
-    } else if (title.includes('HUBSPOT')) {
-      return 'HUBSPOT';
-    }
-    return '';
-  };
 
   // Carousel effect - cycle every 10 seconds (paused on hover)
   useEffect(() => {
@@ -47,7 +25,7 @@ const Home = ({ codingLanguages, projects, certificates, workExp }) => {
       setCurrentCertIndex((prevIndex) => 
         certificates && certificates.length > 0 ? (prevIndex + 1) % certificates.length : 0
       );
-    }, 1000);
+    }, 950);
 
     return () => clearInterval(carouselInterval);
   }, [projects, certificates, isHovering]);
@@ -206,12 +184,10 @@ const Home = ({ codingLanguages, projects, certificates, workExp }) => {
                 <div className="cert-item">
                   <div className="cert-logo-wrapper">
                     <img 
-                      src={getCertificateLogo(certificates[currentCertIndex].title)} 
+                      src={certificates[currentCertIndex].image} 
                       alt={certificates[currentCertIndex].title} 
                       className="cert-logo" 
-                      onError={(e) => { e.target.style.display = 'none'; }}
                     />
-                    <div className="cert-logo-fallback">{getOrganization(certificates[currentCertIndex].title)}</div>
                   </div>
                   <div className="cert-info">
                     <p className="cert-title">{certificates[currentCertIndex].title.replace(' CERTIFICATION', '').replace(' Certification', '').split(' ').slice(0, 4).join(' ')}</p>

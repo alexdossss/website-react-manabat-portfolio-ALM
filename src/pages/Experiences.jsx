@@ -233,8 +233,15 @@ const Experiences = ({ projects = [], workExp = [], certificates = [] }) => {
                   <div className="carousel-content">
                     <div className="carousel-item active">
                       <div className="cert-header">
-                        <h4 className="cert-title">{certificates[currentCertIndex].title}</h4>
-                        <p className="cert-date">{certificates[currentCertIndex].date}</p>
+                        <img 
+                          src={certificates[currentCertIndex].image} 
+                          alt={certificates[currentCertIndex].title}
+                          className="cert-logo" 
+                        />
+                        <div className="cert-title-group">
+                          <h4 className="cert-title">{certificates[currentCertIndex].title}</h4>
+                          <p className="cert-date">{certificates[currentCertIndex].date}</p>
+                        </div>
                       </div>
                       <p className="cert-description">{certificates[currentCertIndex].description}</p>
                       <a href={certificates[currentCertIndex].url} target="_blank" rel="noopener noreferrer" className="cert-link">

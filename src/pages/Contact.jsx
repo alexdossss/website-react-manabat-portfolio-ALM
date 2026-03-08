@@ -77,14 +77,28 @@ const Contact = () => {
           <h2>Contact Information</h2>
           <div className="info-item">
             <h3>Email</h3>
-            <p><a href="mailto:amanabat1927@gmail.com">amanabat1927@gmail.com</a></p>
+            <div className="contact-link-item">
+              <p><a href="mailto:amanabat1927@gmail.com">amanabat1927@gmail.com</a></p>
+            </div>
           </div>
           <div className="info-item">
             <h3>Social Media</h3>
             <div className="social-links-contact">
-              <a href="https://facebook.com/..." target="_blank" rel="noopener noreferrer">Facebook</a>
-              <a href="https://linkedin.com/..." target="_blank" rel="noopener noreferrer">LinkedIn</a>
-              <a href="https://github.com/..." target="_blank" rel="noopener noreferrer">GitHub</a>
+              <div className="social-link-item">
+                <a href="https://www.facebook.com/alexander.manabat.3726/" target="_blank" rel="noopener noreferrer">
+                  <img src="/images/contactlogos/facebook_logo.png" alt="Facebook" className="contact-link-icon" />
+                </a>
+              </div>
+              <div className="social-link-item">
+                <a href="linkedin.com/in/alexander-manabat-8206002a7/" target="_blank" rel="noopener noreferrer">
+                  <img src="/images/contactlogos/link_logo.png" alt="LinkedIn" className="contact-link-icon" />
+                </a>
+              </div>
+              <div className="social-link-item">
+                <a href="https://github.com/alexdossss" target="_blank" rel="noopener noreferrer">
+                  <img src="/images/contactlogos/github_logo.png" alt="GitHub" className="contact-link-icon" />
+                </a>
+              </div>
             </div>
           </div>
         </div>
