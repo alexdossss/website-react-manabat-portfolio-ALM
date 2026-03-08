@@ -44,7 +44,7 @@ html {
 body {
   font-family: 'Lato', sans-serif;
   color: var(--text-primary);
-  background-color: black;
+  background-color: var(--bg-primary);
   transition: var(--transition);
   overflow-x: hidden;
 }

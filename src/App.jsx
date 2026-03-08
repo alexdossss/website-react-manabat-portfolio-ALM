@@ -127,63 +127,63 @@ function App() {
       description: 'Covers HTML, CSS, and responsive web design principles for building adaptable websites - Issued September 2024',
       date: '5 September 2024',
       url: 'https://www.freecodecamp.org/certification/manabatalex/responsive-web-design',
-      image: ''
+      image: '/images/certificatesLogo/free_code_camp.png'
     },
     {
       title: 'Backend Development and APIs V8 Certification FCC',
       description: 'Covers building server-side applications, RESTful APIs, and handling data in backend development - Issued August 2025',
       date: '28 August 2025',
       url: 'https://www.freecodecamp.org/certification/manabatalex/back-end-development-and-apis',
-      image: ''
+      image: '/images/certificatesLogo/free_code_camp.png'
     },
     {
       title: 'Legacy JavaScript Algorithms and Data Structures V7 Certification FCC',
       description: 'Covers JavaScript fundamentals, data structures, and algorithmic problem-solving techniques - Issued July 2025',
       date: '16 July 2025',
       url: 'https://www.freecodecamp.org/certification/manabatalex/javascript-algorithms-and-data-structures',
-      image: ''
+      image: '/images/certificatesLogo/free_code_camp.png'
     },
     {
       title: 'Introduction to PHP SIMPLILEARN',
       description: 'Covers PHP syntax, server-side scripting, and building dynamic web pages - Issued Jan 2025',
       date: '21 Jan 2025',
       url: 'https://simpli-web.app.link/e/gqxD1g4CZ0b',
-      image: ''
+      image: '/images/certificatesLogo/simplilearn.jpg'
     },
     {
       title: 'Design Thinking for Beginners SIMPLILEARN',
       description: 'Covers the design thinking process, ideation techniques, and user-centered problem solving - Issued Jul 2025',
       date: '25 Jul 2025',
       url: 'https://simpli-web.app.link/e/G561BW1CZ0b',
-      image: ''
+      image: '/images/certificatesLogo/simplilearn.jpg'
     },
     {
       title: 'Introduction to Graphic Design; Basics of UI/UX SIMPLILEARN',
       description: 'Covers graphic design fundamentals, UI/UX basics, and visual communication principles - Issued Aug 2025',
       date: '21 Aug 2025',
       url: 'https://simpli-web.app.link/e/Ki843DYCZ0b',
-      image: ''
+      image: '/images/certificatesLogo/simplilearn.jpg'
     },
     {
       title: 'Content Marketing HUBSPOT',
       description: 'Covers content creation, marketing strategies, and optimizing campaigns for engagement - Issued  August 2025',
       date: '25 August 2025',
       url: 'https://app-na2.hubspot.com/academy/243405615/award-share/9206665/achievement-preview',
-      image: ''
+      image: '/images/certificatesLogo/hubspot.jpg'
     },
     {
       title: 'SEO HUBSPOT',
       description: 'Covers search engine optimization strategies, keyword research, and improving website ranking - Issued January 2026',
       date: '11 January 2026',
       url: 'https://app-na2.hubspot.com/academy/243405615/award-share/9157909/achievement-preview',
-      image: ''
+      image: '/images/certificatesLogo/hubspot.jpg'
     },
     {
       title: 'SEO II HUBSPOT',
       description: 'Covers advanced SEO techniques, analytics, and optimizing content for better search performance - Issued Febuary 2026',
       date: '4 Febuary 2026',
       url: 'https://app-na2.hubspot.com/academy/243405615/award-share/9108127/achievement-preview',
-      image: ''
+      image: '/images/certificatesLogo/hubspot.jpg'
     }
   ];
 

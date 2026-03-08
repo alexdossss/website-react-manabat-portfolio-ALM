@@ -2,15 +2,16 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background-color: var(--bg-primary);
   transition: var(--transition);
 }
 
 .main-content {
   margin-top: 80px;
-  margin-bottom: 120px;
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
+  background-color: var(--bg-primary);
 }
 
 

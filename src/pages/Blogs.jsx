@@ -1,6 +1,41 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/pages.css';
+
+const MagneticCard = ({ children, post }) => {
+  const cardRef = useRef(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e) => {
+    if (!cardRef.current) return;
+    const { left, top, width, height } = cardRef.current.getBoundingClientRect();
+    
+    // Calculate distance from center
+    const x = (e.clientX - (left + width / 2)) * 0.15; // Strength multiplier
+    const y = (e.clientY - (top + height / 2)) * 0.15;
+    
+    setPosition({ x, y });
+  };
+
+  const handleMouseLeave = () => {
+    setPosition({ x: 0, y: 0 });
+  };
+
+  return (
+    <Link
+      ref={cardRef}
+      to={`/blogs/${post.id}`}
+      className="blog-post-card"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        transform: `translate3d(${position.x}px, ${position.y}px, 0) scale(${position.x !== 0 ? 1.02 : 1})`,
+      }}
+    >
+      {children}
+    </Link>
+  );
+};
 
 const Blogs = () => {
   const blogs = [
@@ -26,11 +61,19 @@ const Blogs = () => {
 
   return (
     <div className="page blogs-page">
-      <h1>Blog</h1>
-      <p className="blogs-intro">I created this blog page to share my learning journey, insights, and experiences in software development. It serves as a space where I document concepts I've studied, challenges I've encountered, and solutions I've discovered while building projects. Through these posts, I aim to reinforce my understanding while also helping others who may be learning similar technologies.</p>
+      <div className='upper-left-blogs'>
+        <section className='blogs-top'>
+          <div className='header-h1-h2-layered'>
+            <h1>LATEST POSTS</h1>
+            <h2>Blogs</h2>
+          </div>
+        </section>
+        <p className="blogs-intro">I created this blog page to share my learning journey, insights, and experiences in software development. It serves as a space where I document concepts I've studied, challenges I've encountered, and solutions I've discovered while building projects.</p>
+      </div>
+
       <div className="blog-list">
         {blogs.map((post) => (
-          <Link key={post.id} to={`/blogs/${post.id}`} className="blog-post-card">
+          <MagneticCard key={post.id} post={post}>
             <div className="blog-image-container">
               <img src={post.image} alt={post.title} className="blog-card-image" />
             </div>
@@ -43,7 +86,7 @@ const Blogs = () => {
               <span className="blog-date">{post.date}</span>
               <span className="blog-read-time">{post.readTime}</span>
             </div>
-          </Link>
+          </MagneticCard>
         ))}
       </div>
     </div>
