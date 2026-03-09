@@ -4,6 +4,7 @@
   min-height: 100vh;
   background-color: var(--bg-primary);
   transition: var(--transition);
+  position: relative;
 }
 
 .main-content {
@@ -12,6 +13,8 @@
   overflow-y: auto;
   overflow-x: hidden;
   background-color: var(--bg-primary);
+  position: relative;
+  z-index: 2;
 }
 
 

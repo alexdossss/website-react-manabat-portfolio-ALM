@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import LogoLoop from '../components/LogoLoop';
+import FloatingBlobBackground from '../components/FloatingBlobBackground';
 import '../styles/pages.css';
 
 const Home = ({ codingLanguages, projects, certificates, workExp }) => {
@@ -130,6 +131,7 @@ const Home = ({ codingLanguages, projects, certificates, workExp }) => {
 
   return (
     <div className="page home-page">
+      <FloatingBlobBackground />
       {/* Custom Cursor Tooltip Layer */}
       <div 
         className={`bento-cursor-tooltip ${cursorData.visible ? 'active' : ''}`}

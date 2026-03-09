@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from '@formspree/react';
+import FloatingBlobBackground from '../components/FloatingBlobBackground';
+import GlareHover from '../components/GlareHover';
 import '../styles/pages.css';
 
 const Contact = () => {
@@ -29,6 +31,7 @@ const Contact = () => {
 
   return (
     <div className="page contact-page">
+      <FloatingBlobBackground />
       <section className="contact-content">
         {/* Left Side: Header, Description, and Form grouped together */}
         <div className="contact-top-side">
@@ -44,36 +47,63 @@ const Contact = () => {
           </p>
         
         </div>
-        <div className='form-info'>
-            <form className="contact-form" onSubmit={onSubmit}>
-            <div className="form-group">
-              <label htmlFor="name">Full Name *</label>
-              <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} placeholder="Your name" required />
-            </div>
+        <div className="contact-form-and-info">
+          <div className='form-info'>
+            <GlareHover
+              width="100%"
+              height="auto"
+              background="transparent"
+              borderRadius="12px"
+              borderColor="rgba(0, 198, 255, 0.3)"
+              glareColor="#00C6FF"
+              glareOpacity={0.1}
+              glareAngle={-30}
+              glareSize={300}
+              transitionDuration={800}
+              playOnce={false}
+              magnetism={true}
+              magneticStrength={0.05}
+              style={{
+                minHeight: 'auto',
+                padding: '0',
+                display: 'block',
+              }}
+            >
+              <form 
+                className="contact-form" 
+                onSubmit={onSubmit}
+                style={state.succeeded ? { border: '2px solid #d4edda', borderRadius: '12px', padding: '20px' } : {}}
+              >
+                <div className="form-group">
+                  <label htmlFor="name">Full Name *</label>
+                  <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} placeholder="Your name" required />
+                </div>
 
-            <div className="form-group">
-              <label htmlFor="email">Email Address *</label>
-              <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} placeholder="your.email@example.com" required />
-            </div>
+                <div className="form-group">
+                  <label htmlFor="email">Email Address *</label>
+                  <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} placeholder="your.email@example.com" required />
+                </div>
 
-            <div className="form-group">
-              <label htmlFor="subject">Subject *</label>
-              <input type="text" id="subject" name="subject" value={formData.subject} onChange={handleChange} placeholder="What is this about?" required />
-            </div>
+                <div className="form-group">
+                  <label htmlFor="subject">Subject *</label>
+                  <input type="text" id="subject" name="subject" value={formData.subject} onChange={handleChange} placeholder="What is this about?" required />
+                </div>
 
-            <div className="form-group">
-              <label htmlFor="message">Message *</label>
-              <textarea id="message" name="message" value={formData.message} onChange={handleChange} placeholder="Your message here..." rows="6" required></textarea>
-            </div>
+                <div className="form-group">
+                  <label htmlFor="message">Message *</label>
+                  <textarea id="message" name="message" value={formData.message} onChange={handleChange} placeholder="Your message here..." rows="6" required></textarea>
+                </div>
 
-            <button type="submit" className="submit-btn" disabled={state.submitting}>
-              {state.submitting ? 'Sending...' : 'Send Message'}
-            </button>
-            
-            {state.succeeded && <p className="success-message">Thank you! Your message has been sent successfully.</p>}
-          </form>
-        {/* Right Side: Contact Info aligned in the same row */}
-        <div className="contact-info">
+                <button type="submit" className="submit-btn" disabled={state.submitting}>
+                  {state.submitting ? 'Sending...' : 'Send Message'}
+                </button>
+                
+                {state.succeeded && <p className="success-message">Thank you! Your message has been sent successfully.</p>}
+              </form>
+            </GlareHover>
+          </div>
+          {/* Right Side: Contact Info aligned in the same row */}
+          <div className="contact-info">
           <h2>Contact Information</h2>
           <div className="info-item">
             <h3>Email</h3>
@@ -100,8 +130,8 @@ const Contact = () => {
                 </a>
               </div>
             </div>
+            </div>
           </div>
-        </div>
         </div>
       </section>
     </div>

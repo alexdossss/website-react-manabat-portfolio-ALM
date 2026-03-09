@@ -1,11 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import LogoLoop from '../components/LogoLoop';
 import Lanyard from '../components/Lanyard';
+import FloatingBlobBackground from '../components/FloatingBlobBackground';
 import "../styles/pages.css"
 
 const About = ({ codingLanguages, skills }) => {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      const cards = document.querySelectorAll('.sanlorenzo, .holyangeluni');
+      
+      cards.forEach(card => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        // Calculate percentage position for the gradient
+        const xPercent = (x / rect.width) * 100;
+        const yPercent = (y / rect.height) * 100;
+        
+        card.style.setProperty('--mouse-x', `${xPercent}%`);
+        card.style.setProperty('--mouse-y', `${yPercent}%`);
+      });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
   return (
     <div className="page about-page">
+        <FloatingBlobBackground />
         {/* RESTRUCTURED SECTION */}
         <div className='about-me-content'>
             <div className="about-me-main-flex">

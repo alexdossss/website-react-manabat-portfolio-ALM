@@ -1,9 +1,11 @@
 import React from 'react';
+import FloatingBlobBackground from '../components/FloatingBlobBackground';
 import '../styles/pages.css';
 
 const Resume = () => {
   return (
     <div className="page resume-page">
+      <FloatingBlobBackground />
       <div className="resume-container">
         <header className="resume-header">
           <h1>Alexander Manabat</h1>

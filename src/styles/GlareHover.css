@@ -1,0 +1,58 @@
+.glare-hover {
+  width: var(--gh-width);
+  height: var(--gh-height);
+  border-radius: var(--gh-br);
+  overflow: hidden;
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.glare-hover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    var(--gh-angle),
+    /* 0% to 60%: Completely transparent */
+    rgba(255, 255, 255, 0) 60%,
+    /* 65%: The leading edge of the reflection */
+    rgba(255, 255, 255, 0.2) 65%,
+    /* 70%: The bright silver "hotspot" */
+    var(--gh-rgba) 70%,
+    /* 75%: The trailing edge */
+    rgba(255, 255, 255, 0.2) 75%,
+    /* 80% to 100%: Fade back to nothing */
+    rgba(255, 255, 255, 0) 80%
+  );
+  transition: var(--gh-duration) ease;
+  background-size:
+    var(--gh-size) var(--gh-size),
+    100% 100%;
+  background-repeat: no-repeat;
+  background-position:
+    -100% -100%,
+    0 0;
+  pointer-events: none;
+}
+
+.glare-hover:hover {
+  cursor: pointer;
+}
+
+.glare-hover:hover::before {
+  background-position:
+    100% 100%,
+    0 0;
+}
+
+.glare-hover--play-once::before {
+  transition: none;
+}
+
+.glare-hover--play-once:hover::before {
+  transition: var(--gh-duration) ease;
+  background-position:
+    100% 100%,
+    0 0;
+}

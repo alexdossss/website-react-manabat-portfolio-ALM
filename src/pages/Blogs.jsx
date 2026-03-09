@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import FloatingBlobBackground from '../components/FloatingBlobBackground';
 import '../styles/pages.css';
 
 const MagneticCard = ({ children, post }) => {
@@ -61,6 +62,7 @@ const Blogs = () => {
 
   return (
     <div className="page blogs-page">
+      <FloatingBlobBackground />
       <div className='upper-left-blogs'>
         <section className='blogs-top'>
           <div className='header-h1-h2-layered'>

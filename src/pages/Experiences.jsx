@@ -1,6 +1,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 import CardSwap, { Card } from '../components/CardSwap';
 import Folder from '../components/Folder';
+import FloatingBlobBackground from '../components/FloatingBlobBackground';
 import '../styles/pages.css';
 
 const Experiences = ({ projects = [], workExp = [], certificates = [] }) => {
@@ -32,6 +33,7 @@ const Experiences = ({ projects = [], workExp = [], certificates = [] }) => {
 
   return (
     <div className="page experiences-page">
+      <FloatingBlobBackground />
       <section className="experiences-header">
         <div className="header-h1-h2-layered">
           <h1>DEVELOPMENT</h1>

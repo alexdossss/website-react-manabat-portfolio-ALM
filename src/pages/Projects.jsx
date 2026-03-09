@@ -1,4 +1,5 @@
 import React from 'react';
+import FloatingBlobBackground from '../components/FloatingBlobBackground';
 import '../styles/pages.css';
 
 const Projects = () => {
@@ -55,6 +56,7 @@ const Projects = () => {
 
   return (
     <div className="page projects-page">
+      <FloatingBlobBackground />
       <h1>Portfolio Projects</h1>
       <p className="projects-intro">
         Here are some of the projects I've worked on. Each represents a unique challenge and learning opportunity.

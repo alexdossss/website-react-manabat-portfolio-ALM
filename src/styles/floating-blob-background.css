@@ -1,0 +1,87 @@
+.floating-blobs-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: lighten;
+  contain: layout;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.blob-1 {
+  width: 450px;
+  height: 450px;
+  top: -150px;
+  left: -150px;
+  opacity: 0.05;
+}
+.blob-2 {
+  width: 450px;
+  height: 450px;
+  top: 30%;
+  right: -100px;
+  opacity: 0.05;
+}
+
+.blob-3 {
+  width: 450px;
+  height: 450px;
+  bottom: -120px;
+  left: 8%;
+  opacity: 0.05;
+}
+
+.blob-4 {
+  width: 450px;
+  height: 450px;
+  top: 15%;
+  right: 30%;
+  opacity: 0.05;
+}
+
+
+/* Mobile optimization */
+@media (max-width: 768px) {
+  .blob {
+    filter: blur(50px);
+    opacity: 0.1;
+  }
+
+  .blob-1 {
+    width: 350px;
+    height: 350px;
+  }
+
+  .blob-2 {
+    width: 320px;
+    height: 320px;
+  }
+
+  .blob-3 {
+    width: 330px;
+    height: 330px;
+  }
+
+  .blob-4 {
+    width: 300px;
+    height: 300px;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+  .floating-blobs-container {
+    contain: paint;
+  }
+
+  .blob {
+    filter: blur(40px);
+  }
+}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
+import FloatingBlobBackground from '../components/FloatingBlobBackground';
 import '../styles/pages.css';
 
 const BlogDetail = () => {
@@ -129,6 +130,7 @@ const BlogDetail = () => {
   
   return (
     <div className="page blog-detail-page">
+      <FloatingBlobBackground />
       <article className="blog-detail">
         <header className="blog-detail-header">
           <Link to="/blogs" className="back-link">
