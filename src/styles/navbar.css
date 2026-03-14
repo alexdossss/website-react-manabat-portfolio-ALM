@@ -112,7 +112,9 @@ height: 60px;
     padding: 8px 12px;
     flex-wrap: wrap;
     justify-content: center;
-    max-width: 90vw;
+    width: 25em;
+    min-width: 93vw;
+    font-size: 12px;
   }
 
   .nav-link {

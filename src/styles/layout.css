@@ -10,11 +10,20 @@
 .main-content {
   margin-top: 80px;
   flex: 1;
-  overflow-y: auto;
+  overflow: hidden;
   overflow-x: hidden;
+  overflow-y: scroll;
   background-color: var(--bg-primary);
   position: relative;
   z-index: 2;
+}
+
+@media screen and (max-width: 768px) {
+  .main-content {
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-bottom: 120px;
+  }
 }
 
 
@@ -35,14 +44,12 @@
 /* Responsive */
 @media screen and (max-width: 768px) {
   .main-content {
-    margin-top: 70px;
-    margin-bottom: 120px;
+    margin-bottom: 0;
   }
 }
 
 @media screen and (max-width: 480px) {
   .main-content {
     margin-top: 60px;
-    margin-bottom: 100px;
   }
 }

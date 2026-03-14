@@ -72,3 +72,23 @@
 .logo-loop-container:hover .logo-loop-content {
   animation-play-state: paused;
 }
+
+
+@media screen and (max-width: 480px) {
+  .logo-loop-content{
+    gap: 30px;
+  }
+
+  .logo-item{
+    gap: 2px;
+  }
+
+  .logo-item img{
+    width: 25px;
+  }
+  
+  .logo-item p{
+    font-size: 10px;
+  }
+  
+}

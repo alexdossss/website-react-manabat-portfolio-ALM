@@ -131,12 +131,17 @@
 
 @media screen and (max-width: 480px) {
   .upper-header {
-    height: 60px;
-    padding: 0 16px;
+    height: 80px;
+    padding: 20px 16px;
+  }
+
+  .upper-header .upper-header-logo{
+    width: 25px;
+    height: auto;
   }
 
   .header-left {
-    gap: 12px;
+    gap: 20px;
   }
 
   .logo h1 {
