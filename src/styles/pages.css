@@ -2452,6 +2452,222 @@ canvas {
 }
 
 /* ============ RESPONSIVE ============ */
+@media screen and (max-width: 1400px) {
+  .page.experiences-page .experiences-card-swap-wrapper {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    gap: 32px;
+    overflow-x: hidden;
+  }
+
+  .page.experiences-page .experiences-card-container {
+    order: 1;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .page.experiences-page .experiences-card-container > div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .page.experiences-page .experiences-card-container .card-swap-container {
+    position: absolute;
+    left: 50%;
+    right: auto;
+    top: auto;
+    bottom: 0;
+    transform: translate(-50%, 0) scale(0.88);
+    transform-origin: bottom center;
+  }
+
+  .page.experiences-page .experiences-info-section {
+    order: 2;
+    margin-top: 0;
+    width: 100%;
+    max-width: 900px;
+  }
+
+  .page.experiences-page .experiences-info {
+    align-items: center;
+  }
+
+  .page.experiences-page .experience-item {
+    width: 100%;
+    max-width: 900px;
+    height: auto;
+    margin: 0 auto;
+  }
+
+  .page.experiences-page .experiences-nav-controls {
+    padding: 0;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .about-page .about-me-content {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto 60px auto;
+    gap: 24px;
+  }
+
+  .about-page .about-me-main-flex {
+    flex-direction: column;
+    text-align: center;
+    gap: 28px;
+    padding: 0;
+  }
+
+  .about-page .lanyard-column {
+    position: relative;
+    width: 100%;
+    max-width: 520px;
+    height: 520px;
+    margin: 0 auto;
+    overflow: visible;
+  }
+
+  .about-page .lanyard-wrapper {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: auto;
+    transform: scale(1);
+    --lanyard-rope-width: 1.8;
+    --lanyard-hit-scale: 1.15;
+  }
+
+  .about-page canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .about-page .about-me-inner-contents {
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .about-page .about-me-inner-contents p {
+    max-width: 100%;
+  }
+
+  .about-page .short-bio-about {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 24px;
+    width: 100%;
+  }
+
+  .about-page .inner-about-bio {
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .about-page .inner-about-bio .image-n-text {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .page.about-page .capabilities-parent-container {
+    width: 100%;
+    margin: 8em 0;
+    gap: 40px;
+  }
+
+  .page.about-page .capabilities-parent-container .skills-grid {
+    width: 100%;
+    max-width: 620px;
+    margin-left: auto;
+    margin-right: auto;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .page.about-page .skills-section-header h1 {
+    font-size: 56px;
+    white-space: normal;
+  }
+
+  .page.about-page .skills-section-header h2 {
+    font-size: 34px;
+    bottom: 6px;
+  }
+
+  .page.about-page .education-background-container {
+    gap: 40px;
+  }
+
+  .page.about-page .main-education-info {
+    padding: 30px 0;
+    gap: 40px;
+  }
+
+  .page.about-page .main-education-info::before,
+  .page.about-page .holyangeluni::before,
+  .page.about-page .sanlorenzo::before {
+    display: none;
+  }
+
+  .page.about-page .sanlorenzo,
+  .page.about-page .holyangeluni {
+    width: 100%;
+    grid-template-columns: 1fr;
+    padding: 24px;
+    gap: 18px;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .page.about-page .sanlorenzo > section:first-child,
+  .page.about-page .holyangeluni > section:first-child {
+    min-width: 0;
+    justify-content: flex-start;
+  }
+
+  .page.about-page .sanlorenzo img,
+  .page.about-page .holyangeluni img {
+    width: 90px;
+    height: 90px;
+  }
+
+  .page.about-page .desc-education .header-h1-h2-layered {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .page.about-page .desc-education .header-h1-h2-layered h1 {
+    font-size: 56px;
+    white-space: normal;
+  }
+
+  .page.about-page .desc-education .header-h1-h2-layered h2 {
+    font-size: 34px;
+    bottom: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .about-page img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .page {
     padding: 60px 20px;
@@ -2479,7 +2695,7 @@ canvas {
   .projects-page,
   .resume-page {
     position: relative;
-    padding: 60px 20px;
+    padding: 60px 50px;
   }
 
   .bento-grid {
@@ -2570,19 +2786,108 @@ canvas {
   }
 
   /* Experiences Responsive Tablet */
-  .experiences-card-swap-wrapper {
-    grid-template-columns: 1fr;
-    padding: 0 20px;
-    gap: 60px;
+  .page.experiences-page .experiences-card-swap-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0;
+    gap: 40px;
+    margin-bottom: 8em;
   }
 
-  .experiences-info {
+  .page.experiences-page .experiences-info-section {
+    margin-top: 0;
+    order: 2;
+  }
+
+  .page.experiences-page .experiences-card-container {
+    justify-content: center;
+    order: 1;
+  }
+
+  .page.experiences-page .experiences-info {
     padding-top: 0;
   }
 
-  .experience-item {
+  .page.experiences-page .experience-item {
+    width: 100%;
+    max-width: 620px;
+    height: auto;
+    margin: 0 auto;
     padding: 20px;
     gap: 16px;
+  }
+
+  .page.experiences-page .experiences-card-container > div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .page.experiences-page .experiences-card-container .card-swap-container {
+    position: absolute;
+    left: 50%;
+    right: auto;
+    top: auto;
+    bottom: 0;
+    transform: translate(-50%, 0) scale(0.82);
+    transform-origin: bottom center;
+  }
+
+  .page.experiences-page .experiences-nav-controls {
+    padding: 0;
+    gap: 14px;
+    flex-wrap: nowrap;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .page.experiences-page .experiences-indicators {
+    width: auto;
+    flex: 0 1 auto;
+    max-width: 60vw;
+    justify-content: center;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .page.experiences-page .header-h1-h2-layered {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .page.experiences-page .header-h1-h2-layered h1 {
+    color: rgba(48, 50, 56, 0.3);
+    font-size: clamp(52px, 8.5vw, 78px);
+    font-weight: 900;
+    margin: 0;
+    line-height: 0.9;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .page.experiences-page .header-h1-h2-layered h2 {
+    position: absolute;
+    color: #005bea;
+    font-size: clamp(30px, 5.5vw, 48px);
+    font-weight: 700;
+    margin: 0;
+    padding: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -35%);
+    z-index: 2;
+    text-transform: capitalize;
+    white-space: nowrap;
   }
 
   .project-name {
@@ -2600,6 +2905,152 @@ canvas {
   .tech-badge {
     font-size: 12px;
     padding: 5px 10px;
+  }
+
+  .about-page .about-me-content {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto 60px auto;
+    gap: 24px;
+  }
+
+  .about-page .about-me-main-flex {
+    flex-direction: column;
+    text-align: center;
+    gap: 28px;
+    padding: 0;
+  }
+
+  .about-page .lanyard-column {
+    width: 100%;
+    max-width: 520px;
+    height: 520px;
+    margin: -120px auto 0;
+    overflow: visible;
+  }
+
+  .about-page .lanyard-wrapper {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: auto;
+    --lanyard-rope-width: 0.7;
+    --lanyard-hit-scale: 1.15;
+  }
+
+  .about-page canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .about-page .about-me-inner-contents {
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .about-page .about-me-inner-contents p {
+    max-width: 100%;
+  }
+
+  .about-page .short-bio-about {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 24px;
+    width: 100%;
+  }
+
+  .about-page .inner-about-bio {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .about-page img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .page.about-page .capabilities-parent-container {
+    width: 100%;
+    margin: 8em 0;
+    gap: 40px;
+  }
+
+  .page.about-page .capabilities-parent-container .skills-grid {
+    width: 100%;
+    max-width: 620px;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .page.about-page .skills-section-header h1 {
+    font-size: 56px;
+    white-space: normal;
+  }
+
+  .page.about-page .skills-section-header h2 {
+    font-size: 34px;
+    bottom: 6px;
+  }
+
+  .page.about-page .education-background-container {
+    gap: 40px;
+  }
+
+  .page.about-page .main-education-info {
+    padding: 30px 0;
+    gap: 40px;
+  }
+
+  .page.about-page .main-education-info::before,
+  .page.about-page .holyangeluni::before,
+  .page.about-page .sanlorenzo::before {
+    display: none;
+  }
+
+  .page.about-page .sanlorenzo,
+  .page.about-page .holyangeluni {
+    width: 100%;
+    grid-template-columns: 1fr;
+    padding: 24px;
+    gap: 18px;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .page.about-page .sanlorenzo > section:first-child,
+  .page.about-page .holyangeluni > section:first-child {
+    min-width: 0;
+    justify-content: flex-start;
+  }
+
+  .page.about-page .sanlorenzo img,
+  .page.about-page .holyangeluni img {
+    width: 90px;
+    height: 90px;
+  }
+
+  .page.about-page .desc-education .header-h1-h2-layered {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .page.about-page .desc-education .header-h1-h2-layered h1 {
+    font-size: 56px;
+    white-space: normal;
+  }
+
+  .page.about-page .desc-education .header-h1-h2-layered h2 {
+    font-size: 34px;
+    bottom: 6px;
+    left: 50%;
+    transform: translateX(-50%);
   }
 }
 
@@ -2920,42 +3371,354 @@ canvas {
   }
 
   /* Experiences Responsive Mobile */
-  .experiences-card-swap-wrapper {
-    grid-template-columns: 1fr;
+  .page.experiences-page .experiences-card-swap-wrapper {
+    flex-direction: column;
+    align-items: stretch;
     padding: 0;
-    gap: 40px;
+    gap: 24px;
+    margin-bottom: 6em;
   }
 
-  .experiences-info {
+  .page.experiences-page .experiences-info-section {
+    margin-top: 0;
+    order: 2;
+  }
+
+  .page.experiences-page .experiences-card-container {
+    justify-content: center;
+    order: 1;
+  }
+
+  .page.experiences-page .experiences-info {
     padding-top: 0;
   }
 
-  .capabilities-parent-container .skills-grid{
+  .page.about-page .capabilities-parent-container .skills-grid{
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
+    width: 100%;
+    max-width: 100%;
+    gap: 16px;
   }
 
-  .main-education-info::before, .holyangeluni::before, .sanlorenzo::before{
+  .about-page .main-education-info::before, .about-page .holyangeluni::before, .about-page .sanlorenzo::before{
     display: none;
   }
 
-  .experience-item {
+  .about-page .about-me-content {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto 40px auto;
+    gap: 18px;
+  }
+
+  .about-page .about-me-main-flex {
+    flex-direction: column;
+    text-align: center;
+    gap: 22px;
+    padding: 0;
+  }
+
+  .about-page .lanyard-column {
+    width: 100%;
+    height: 320px;
+    margin: 0 auto;
+  }
+
+  .about-page .lanyard-wrapper {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: auto;
+    --lanyard-rope-width: 1.4;
+    --lanyard-hit-scale: 1.25;
+  }
+
+  .about-page canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .about-page .about-me-inner-contents {
+    align-items: center;
+    text-align: center;
+    gap: 14px;
+  }
+
+  .about-page .about-me-inner-contents h1 {
+    font-size: 1.9rem;
+    margin: 0;
+  }
+
+  .about-page .about-me-inner-contents p {
+    font-size: 0.98rem;
+    line-height: 1.6;
+    max-width: 100%;
+  }
+
+  .about-page .short-bio-about {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 18px;
+    width: 100%;
+  }
+
+  .about-page .inner-about-bio .title {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+  }
+
+  .about-page .image-n-text {
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .about-page .image-n-text p {
+    font-size: 0.95rem;
+  }
+
+  .about-page .inner-about-bio{
+    margin-bottom: 2em;
+  }
+
+  .about-page img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .page.about-page .capabilities-parent-container {
+    width: 100%;
+    margin: 6em 0;
+    gap: 30px;
+  }
+
+  .page.about-page .skills-section-header {
+    margin-bottom: 24px;
+  }
+
+  .page.about-page .skills-section-header h1 {
+    font-size: 44px;
+    white-space: normal;
+  }
+
+  .page.about-page .skills-section-header h2 {
+    font-size: 26px;
+    bottom: 5px;
+  }
+
+  .page.about-page .skill-card-item {
+    width: 100%;
+    padding: 18px;
+    grid-template-columns: auto 1fr;
+    gap: 10px 14px;
+  }
+
+  .page.about-page .skill-number {
+    font-size: 40px;
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .page.about-page .skill-icon-wrapper {
+    width: 38px;
+    height: 38px;
+    grid-column: 1;
+    grid-row: 2;
+    justify-content: flex-start;
+  }
+
+  .page.about-page .skill-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .page.about-page .skill-title {
+    font-size: 16px;
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
+  }
+
+  .page.about-page .skill-description {
+    font-size: 14px;
+    grid-column: 2;
+    grid-row: 2;
+    padding-top: 0;
+  }
+
+  .page.about-page .education-background-container {
+    gap: 34px;
+  }
+
+  .page.about-page .desc-education > p {
+    font-size: 14px;
+    line-height: 1.75;
+  }
+
+  .page.about-page .sanlorenzo,
+  .page.about-page .holyangeluni {
+    width: 100%;
+    grid-template-columns: 1fr;
+    padding: 18px;
+    gap: 16px;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .page.about-page .sanlorenzo > section:first-child,
+  .page.about-page .holyangeluni > section:first-child {
+    justify-content: flex-start;
+  }
+
+  .page.about-page .sanlorenzo img,
+  .page.about-page .holyangeluni img {
+    width: 80px;
+    height: 80px;
+  }
+
+  .page.about-page .ul-list-school li {
+    font-size: 13px;
+    gap: 10px;
+  }
+
+  .page.about-page .main-date {
+    font-size: 12px;
+    margin-left: 10px;
+  }
+
+  .page.about-page .desc-education .header-h1-h2-layered {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .page.about-page .desc-education .header-h1-h2-layered h1 {
+    font-size: 44px;
+    white-space: normal;
+  }
+
+  .page.about-page .desc-education .header-h1-h2-layered h2 {
+    font-size: 26px;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .page.experiences-page .experience-item {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
     padding: 16px;
     gap: 14px;
     border-radius: 8px;
-    width: 23.5em;
+    margin: 0;
   }
 
-  .experiences-info{
+  .page.experiences-page .experiences-card-container > div {
+    width: 100%;
+    height: 360px !important;
+    display: flex;
+    justify-content: center;
+  }
+
+  .page.experiences-page .experiences-card-container .card-swap-container {
+    position: absolute;
+    left: 50%;
+    right: auto;
+    top: auto;
+    bottom: 0;
+    transform: translate(-50%, 0) scale(0.72);
+    transform-origin: bottom center;
+  }
+
+  .page.experiences-page .experiences-nav-controls {
+    padding: 0;
+    gap: 10px;
+    flex-wrap: nowrap;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .page.experiences-page .experiences-nav-btn {
+    flex: 0 0 auto;
+    min-width: 96px;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .page.experiences-page .experiences-indicators {
+    width: auto;
+    flex: 0 1 auto;
+    max-width: 52vw;
+    justify-content: center;
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .page.experiences-page .folder-layout {
+    margin-top: 4em;
+  }
+
+  .page.experiences-page .folder-section {
+    margin-top: 40px;
+  }
+
+  .page.experiences-page .header-h1-h2-layered {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .page.experiences-page .header-h1-h2-layered h1 {
+    color: rgba(48, 50, 56, 0.3);
+    font-size: clamp(42px, 12vw, 58px);
+    font-weight: 900;
+    margin: 0;
+    line-height: 0.9;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .page.experiences-page .header-h1-h2-layered h2 {
+    position: absolute;
+    color: #005bea;
+    font-size: clamp(22px, 8vw, 34px);
+    font-weight: 700;
+    margin: 0;
+    padding: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -35%);
+    z-index: 2;
+    text-transform: capitalize;
+    white-space: nowrap;
+  }
+
+  .page.experiences-page .experiences-info{
     justify-content: center;
     align-items: center;
   }
 
-  .experiences-card-swap-wrapper{
-    height: 40em;
-    gap: 0;
+  .page.experiences-page .experiences-card-swap-wrapper{
+    height: auto;
   }
 
   .project-name {
@@ -3628,22 +4391,122 @@ canvas {
 /* RESPONSIVE: Stack them on mobile */
 @media (max-width: 1024px) {
     .about-me-main-flex {
-        flex-direction: column;
-        text-align: center;
+        flex-direction: row;
+        flex-wrap: wrap;
+        text-align: left;
     }
 
     .about-me-inner-contents {
-        align-items: center;
-        text-align: center;
+        align-items: flex-start;
+        text-align: left;
     }
 
     .lanyard-column {
-        width: 100%;
-        height: 400px;
+        width: 360px;
+        height: 520px;
+        margin-top: 0;
     }
 
     .short-bio-about {
+        justify-content: flex-start;
+        gap: 28px;
+    }
+
+    .about-me-content {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto 70px auto;
+        gap: 24px;
+    }
+
+    .about-page .lanyard-wrapper {
+        position: relative;
+        top: auto;
+        left: auto;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        pointer-events: auto;
+        --lanyard-rope-width: 2;
+        --lanyard-hit-scale: 1.1;
+    }
+
+    .about-page canvas {
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    .about-page .capabilities-parent-container {
+        width: 100%;
+        margin: 10em 0;
+        gap: 50px;
+    }
+
+    .about-page .capabilities-parent-container .skills-grid {
+        width: 100%;
+        max-width: 100%;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+
+    .about-page .skills-section-header h1 {
+        font-size: 64px;
+    }
+
+    .about-page .skills-section-header h2 {
+        font-size: 38px;
+        bottom: 6px;
+    }
+
+    .about-page .education-background-container {
+        width: 100%;
+        max-width: 100%;
+        gap: 50px;
+    }
+
+    .about-page .main-education-info {
+        padding: 50px 0;
+        gap: 60px;
+    }
+
+    .about-page .sanlorenzo,
+    .about-page .holyangeluni {
+        width: 48%;
+        padding: 28px;
+        gap: 22px;
+    }
+
+    .about-page .sanlorenzo::before,
+    .about-page .holyangeluni::before {
+        width: 2em;
+    }
+
+    .about-page .short-bio-about {
         justify-content: center;
+    }
+
+    .about-page .inner-about-bio {
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .about-page .desc-education .header-h1-h2-layered {
+        justify-content: center;
+        text-align: center;
+    }
+
+    .about-page .desc-education .header-h1-h2-layered h1 {
+        font-size: 64px;
+        white-space: normal;
+    }
+
+    .about-page .desc-education .header-h1-h2-layered h2 {
+        font-size: 38px;
+        bottom: 6px;
+        left: 50%;
+        transform: translateX(-50%);
     }
 
     .folder-layout{
@@ -3654,16 +4517,111 @@ canvas {
       margin-top: 10em;
     }
 
-    .experiences-card-swap-wrapper{
+    .experiences-page .experiences-card-swap-wrapper{
       display: flex;
-      flex-direction:column-reverse;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      padding: 0 20px;
+      margin-bottom: 10em;
+      overflow-x: hidden;
+    }
+
+    .experiences-page .experiences-card-container{
+      justify-content: center;
+      width: 100%;
+      order: 1;
+      padding-left: 0;
+      height: auto;
+    }
+
+    .experiences-page .experiences-card-container > div{
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .experiences-page .experiences-card-container .card-swap-container{
+      position: absolute;
+      left: 50%;
+      right: auto;
+      top: auto;
+      bottom: 0;
+      transform: translate(-50%, 0) scale(0.88);
+      transform-origin: bottom center;
+    }
+
+    .experiences-page .experiences-info-section{
+      margin-top: 0;
+      width: 100%;
+      max-width: 900px;
+      order: 2;
+    }
+
+    .experiences-page .experiences-info{
+      align-items: center;
+    }
+
+    .experiences-page .experience-item{
+      width: 100%;
+      max-width: 900px;
+      height: auto;
+      margin: 0 auto;
+    }
+
+    .experiences-page .experiences-nav-controls{
+      padding: 0;
+      gap: 20px;
+      flex-wrap: nowrap;
       justify-content: center;
       align-items: center;
     }
-    .experiences-card-container{
+
+    .experiences-page .experiences-indicators{
       justify-content: center;
-      padding-left: 10em;
-      height: 25em;
+      flex: 0 1 auto;
+      max-width: 520px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .experiences-page .header-h1-h2-layered {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .experiences-page .header-h1-h2-layered h1 {
+      color: rgba(48, 50, 56, 0.3);
+      font-size: clamp(56px, 7vw, 82px);
+      font-weight: 900;
+      margin: 0;
+      line-height: 0.9;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      white-space: normal;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .experiences-page .header-h1-h2-layered h2 {
+      position: absolute;
+      color: #005bea;
+      font-size: clamp(34px, 4.5vw, 50px);
+      font-weight: 700;
+      margin: 0;
+      padding: 0;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -35%);
+      z-index: 2;
+      text-transform: capitalize;
+      white-space: nowrap;
     }
 }
 
@@ -3702,3 +4660,4 @@ canvas {
 
 
 }
+

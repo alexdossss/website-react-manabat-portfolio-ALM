@@ -13,6 +13,9 @@ extend({ MeshLineGeometry, MeshLineMaterial });
 
 export default function Lanyard({ position = [0, 0, 20], gravity = [0, -40, 0], fov = 20, transparent = true }) {
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
+  const wrapperRef = useRef(null);
+  const [ropeWidth, setRopeWidth] = useState(2.5);
+  const [hitScale, setHitScale] = useState(1);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -20,8 +23,23 @@ export default function Lanyard({ position = [0, 0, 20], gravity = [0, -40, 0], 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  useEffect(() => {
+    const syncFromCSS = () => {
+      if (typeof window === 'undefined' || !wrapperRef.current) return;
+      const styles = window.getComputedStyle(wrapperRef.current);
+      const nextRopeWidth = parseFloat(styles.getPropertyValue('--lanyard-rope-width'));
+      const nextHitScale = parseFloat(styles.getPropertyValue('--lanyard-hit-scale'));
+      setRopeWidth(Number.isFinite(nextRopeWidth) ? nextRopeWidth : 2.5);
+      setHitScale(Number.isFinite(nextHitScale) ? nextHitScale : 1);
+    };
+
+    syncFromCSS();
+    window.addEventListener('resize', syncFromCSS);
+    return () => window.removeEventListener('resize', syncFromCSS);
+  }, []);
+
   return (
-    <div className="lanyard-wrapper">
+    <div className="lanyard-wrapper" ref={wrapperRef}>
       <Canvas
         camera={{ position: position, fov: fov }}
         dpr={[1, isMobile ? 1.5 : 2]}
@@ -31,7 +49,7 @@ export default function Lanyard({ position = [0, 0, 20], gravity = [0, -40, 0], 
         <ambientLight intensity={Math.PI} />
         <Physics gravity={gravity} timeStep={isMobile ? 1 / 30 : 1 / 60}>
           <Suspense fallback={null}>
-            <Band isMobile={isMobile} />
+            <Band isMobile={isMobile} ropeWidth={ropeWidth} hitScale={hitScale} />
           </Suspense>
         </Physics>
 
@@ -46,7 +64,7 @@ export default function Lanyard({ position = [0, 0, 20], gravity = [0, -40, 0], 
   );
 }
 
-function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
+function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ropeWidth = 2.5, hitScale = 1 }) {
   const band = useRef(), fixed = useRef(), j1 = useRef(), j2 = useRef(), j3 = useRef(), card = useRef();
   const vec = new THREE.Vector3(), ang = new THREE.Vector3(), rot = new THREE.Vector3(), dir = new THREE.Vector3();
   const segmentProps = { type: 'dynamic', canSleep: true, colliders: false, angularDamping: 4, linearDamping: 4 };
@@ -149,6 +167,10 @@ const backTexture = useMemo(() => {
             onPointerDown={(e)=>(e.target.setPointerCapture(e.pointerId), drag(new THREE.Vector3().copy(e.point).sub(vec.copy(card.current.translation()))))}
           >
             <group>
+              <mesh position={[0, 0, 0.02]}>
+                <planeGeometry args={[1.9 * hitScale, 2.4 * hitScale]} />
+                <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+              </mesh>
               <mesh>
                   <boxGeometry args={[1.9, 2.4, 0.02]} />
                   <meshStandardMaterial color="#ffffff" roughness={0.5} />
@@ -179,7 +201,7 @@ const backTexture = useMemo(() => {
           useMap 
           map={canvasTexture} 
           repeat={[1, 1]} 
-          lineWidth={2.5} 
+          lineWidth={ropeWidth} 
         />
       </mesh>
     </>
