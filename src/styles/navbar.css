@@ -90,6 +90,12 @@ height: 60px;
 }
 
 /* Responsive */
+@media screen and (max-width: 1024px) {
+  .navbar {
+    display: none;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .navbar {
     bottom: 20px;

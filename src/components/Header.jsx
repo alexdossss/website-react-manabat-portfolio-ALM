@@ -1,10 +1,114 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useTheme } from '../context/ThemeContext';
+import React, { useEffect, useRef, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { gsap } from 'gsap';
 import '../styles/header.css';
 
 const Header = () => {
-  const { theme, toggleTheme } = useTheme();
+  const location = useLocation();
+  const [isCompactNav, setIsCompactNav] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const triggerRef = useRef(null);
+  const overlayRef = useRef(null);
+  const panelRef = useRef(null);
+  const closeRef = useRef(null);
+  const itemRefs = useRef([]);
+  const tlRef = useRef(null);
+  const hasOpenedRef = useRef(false);
+
+  const navItems = [
+    { path: '/', label: 'Home' },
+    { path: '/about', label: 'About' },
+    { path: '/experiences', label: 'Experiences' },
+    { path: '/blogs', label: 'Blogs' },
+    { path: '/contact', label: 'Contact' }
+  ];
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 1024px)');
+    const sync = () => setIsCompactNav(mq.matches);
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, []);
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (!isCompactNav) {
+      setMenuOpen(false);
+    }
+  }, [isCompactNav]);
+
+  useEffect(() => {
+    if (!isCompactNav) return;
+
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') setMenuOpen(false);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [isCompactNav]);
+
+  useEffect(() => {
+    if (!isCompactNav) return;
+
+    const overlayEl = overlayRef.current;
+    const panelEl = panelRef.current;
+    const closeEl = closeRef.current;
+    const items = itemRefs.current.filter(Boolean);
+
+    if (!overlayEl || !panelEl) return;
+
+    tlRef.current?.kill();
+    tlRef.current = null;
+
+    if (menuOpen) {
+      hasOpenedRef.current = true;
+      const prevOverflow = document.documentElement.style.overflow;
+      document.documentElement.style.overflow = 'hidden';
+
+      gsap.set(overlayEl, { display: 'block', autoAlpha: 1 });
+      gsap.set(panelEl, { xPercent: 100 });
+      gsap.set(items, { opacity: 0, y: 10, x: 12 });
+
+      const tl = gsap.timeline({
+        defaults: { ease: 'power3.out' },
+        onComplete: () => {
+          closeEl?.focus?.();
+        }
+      });
+
+      tlRef.current = tl;
+
+      tl.to(panelEl, { xPercent: 0, duration: 0.45 }, 0);
+      tl.to(items, { opacity: 1, y: 0, x: 0, duration: 0.35, stagger: 0.06 }, 0.12);
+
+      return () => {
+        document.documentElement.style.overflow = prevOverflow;
+      };
+    }
+
+    if (!hasOpenedRef.current) {
+      gsap.set(overlayEl, { display: 'none', autoAlpha: 0 });
+      gsap.set(panelEl, { xPercent: 100 });
+      return;
+    }
+
+    const tl = gsap.timeline({
+      defaults: { ease: 'power3.inOut' },
+      onComplete: () => {
+        gsap.set(overlayEl, { display: 'none', autoAlpha: 0 });
+        triggerRef.current?.focus?.();
+      }
+    });
+
+    tlRef.current = tl;
+    tl.to(panelEl, { xPercent: 100, duration: 0.35 }, 0);
+    tl.to(items, { opacity: 0, y: 8, duration: 0.2, stagger: 0.03 }, 0);
+  }, [isCompactNav, menuOpen]);
 
   return (
     <header className="upper-header">
@@ -54,14 +158,92 @@ const Header = () => {
         </div>
       </div>
       <div className="header-right">
-        <a 
-          href="/resume/Alexander_Manabat_Resume.pdf" 
-          download="Alexander_Manabat_Resume.pdf"
-          className="download-btn"
-        >
-          Download Resume
-        </a>
+        {!isCompactNav ? (
+          <a
+            href="/resume/Alexander_Manabat_Resume.pdf"
+            download="Alexander_Manabat_Resume.pdf"
+            className="download-btn"
+          >
+            Download Resume
+          </a>
+        ) : (
+          <button
+            ref={triggerRef}
+            type="button"
+            className="menu-trigger"
+            aria-label="Open menu"
+            aria-haspopup="dialog"
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+            onClick={() => setMenuOpen(true)}
+          >
+            <span className="menu-trigger-icon" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </span>
+          </button>
+        )}
       </div>
+
+      {isCompactNav && (
+        <div
+          ref={overlayRef}
+          className={`mobile-menu-overlay ${menuOpen ? 'open' : ''}`}
+          aria-hidden={!menuOpen}
+        >
+          <button
+            type="button"
+            className="mobile-menu-backdrop"
+            aria-label="Close menu"
+            onClick={() => setMenuOpen(false)}
+          />
+          <aside
+            ref={panelRef}
+            id="mobile-menu"
+            className="mobile-menu-panel"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site navigation"
+          >
+            <button
+              ref={closeRef}
+              type="button"
+              className="mobile-menu-close"
+              aria-label="Close menu"
+              onClick={() => setMenuOpen(false)}
+            >
+              <span className="mobile-menu-close-icon" aria-hidden="true" />
+            </button>
+            <nav className="mobile-menu-nav">
+              {navItems.map((item, i) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className="mobile-menu-link"
+                  ref={(el) => {
+                    itemRefs.current[i] = el;
+                  }}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <a
+                className="mobile-menu-link mobile-menu-resume"
+                ref={(el) => {
+                  itemRefs.current[navItems.length] = el;
+                }}
+                href="/resume/Alexander_Manabat_Resume.pdf"
+                download="Alexander_Manabat_Resume.pdf"
+                onClick={() => setMenuOpen(false)}
+              >
+                Download Resume
+              </a>
+            </nav>
+          </aside>
+        </div>
+      )}
     </header>
   );
 };
