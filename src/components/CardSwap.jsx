@@ -22,6 +22,10 @@ const placeNow = (el, slot, skew) =>
     xPercent: -50,
     yPercent: -50,
     skewY: skew,
+    rotationX: 0,
+    rotationY: 0,
+    rotationZ: 0,
+    scale: 1,
     transformOrigin: 'center center',
     zIndex: slot.zIndex,
     force3D: true
@@ -75,12 +79,27 @@ const CardSwap = forwardRef(({
   const intervalRef = useRef();
   const container = useRef(null);
   const tiltTweensRef = useRef({});
+  const pendingActiveIndexRef = useRef(null);
+  const hoverCountRef = useRef(0);
 
   useEffect(() => {
     const total = refs.length;
     
     // Always reorder when activeIndex changes OR on initial mount (when lastActiveIndexRef is -1)
     if (activeIndex !== lastActiveIndexRef.current && refs.length > 0) {
+      // If an animation is currently running:
+      // - Ignore the update if it's the index we just animated to.
+      // - Otherwise, interrupt the animation and snap to the requested index.
+      if (tlRef.current?.isActive?.()) {
+        if (pendingActiveIndexRef.current === activeIndex) {
+          lastActiveIndexRef.current = activeIndex;
+          return;
+        }
+        tlRef.current.kill();
+        tlRef.current = null;
+        pendingActiveIndexRef.current = null;
+      }
+
       lastActiveIndexRef.current = activeIndex;
       const newOrder = Array.from({ length: refs.length }, (_, i) => (activeIndex + i) % refs.length);
       order.current = newOrder;
@@ -90,10 +109,6 @@ const CardSwap = forwardRef(({
         const refIndex = newOrder[slotIndex];
         placeNow(refs[refIndex].current, makeSlot(slotIndex, cardDistance, verticalDistance, total), skewAmount);
       });
-      
-      if (onCardChange) {
-        onCardChange(newOrder[0]);
-      }
     }
   }, [activeIndex, cardDistance, verticalDistance, skewAmount, onCardChange, refs.length]);
 
@@ -105,6 +120,7 @@ const CardSwap = forwardRef(({
 
     const swap = () => {
       if (order.current.length < 2) return;
+      if (tlRef.current?.isActive?.()) return;
 
       const [front, ...rest] = order.current;
 
@@ -118,14 +134,15 @@ const CardSwap = forwardRef(({
       }
 
       // ensure starting positions are correct (use current order)
-      refs.forEach((r, i) => {
-        const slot = makeSlot(i, cardDistance, verticalDistance, refs.length);
-        if (r?.current) placeNow(r.current, slot, skewAmount);
+      order.current.forEach((idx, slotIndex) => {
+        const el = refs[idx]?.current;
+        if (!el) return;
+        const slot = makeSlot(slotIndex, cardDistance, verticalDistance, refs.length);
+        placeNow(el, slot, skewAmount);
       });
 
-      // Determine the next front index (for immediate text sync) but DO NOT mutate order yet
+      // Determine the next front index but DO NOT mutate order yet
       const nextFront = rest[0];
-      if (onCardChange) onCardChange(nextFront);
 
       const elFront = refs[front].current;
       const tl = gsap.timeline();
@@ -141,6 +158,10 @@ const CardSwap = forwardRef(({
 
       // While front drops, promote remaining cards forward with stagger
       tl.addLabel('promote', `-=${config.durDrop * config.promoteOverlap}`);
+      tl.call(() => {
+        pendingActiveIndexRef.current = nextFront;
+        onCardChange?.(nextFront);
+      }, undefined, 'promote');
       rest.forEach((idx, i) => {
         const el = refs[idx]?.current;
         if (!el) return;
@@ -179,6 +200,7 @@ const CardSwap = forwardRef(({
       // After animation completes, commit the new order
       tl.call(() => {
         order.current = [...rest, front];
+        pendingActiveIndexRef.current = null;
       });
     };
 
@@ -187,6 +209,9 @@ const CardSwap = forwardRef(({
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
+
+    // If delay is <= 0, autoplay is disabled and the parent is expected to drive transitions.
+    if (!delay || delay <= 0) return;
 
     // Start interval WITHOUT calling swap() immediately - let initial positioning take effect first
     intervalRef.current = window.setInterval(swap, delay);
@@ -200,6 +225,7 @@ const CardSwap = forwardRef(({
       ];
 
       const pause = () => {
+        hoverCountRef.current += 1;
         tlRef.current?.pause();
         if (intervalRef.current) {
           clearInterval(intervalRef.current);
@@ -207,8 +233,10 @@ const CardSwap = forwardRef(({
         }
       };
       const resume = () => {
+        hoverCountRef.current = Math.max(0, hoverCountRef.current - 1);
+        if (hoverCountRef.current !== 0) return;
         tlRef.current?.play();
-        intervalRef.current = window.setInterval(swap, delay);
+        if (!intervalRef.current) intervalRef.current = window.setInterval(swap, delay);
       };
 
       nodesToMonitor.forEach(node => {
@@ -221,6 +249,7 @@ const CardSwap = forwardRef(({
           node.removeEventListener('mouseenter', pause);
           node.removeEventListener('mouseleave', resume);
         });
+        hoverCountRef.current = 0;
         if (intervalRef.current) {
           clearInterval(intervalRef.current);
           intervalRef.current = null;
@@ -254,12 +283,21 @@ const CardSwap = forwardRef(({
   useImperativeHandle(ref, () => ({
     animateNext: () => {
       if (order.current.length < 2) return;
+      if (tlRef.current?.isActive?.()) {
+        try {
+          tlRef.current.progress(1);
+        } catch (err) {
+          // ignore
+        }
+        tlRef.current.kill();
+        tlRef.current = null;
+        pendingActiveIndexRef.current = null;
+      }
 
       const [front, ...rest] = order.current;
 
-      // Notify immediately about next front (for synced text), but delay mutating order
+      // Determine the next front index, but only notify when the swap visually starts.
       const nextFront = rest[0];
-      if (onCardChange) onCardChange(nextFront);
 
       const elFront = refs[front].current;
 
@@ -270,9 +308,11 @@ const CardSwap = forwardRef(({
       }
 
       // ensure starting positions
-      refs.forEach((r, i) => {
-        const slot = makeSlot(i, cardDistance, verticalDistance, refs.length);
-        if (r?.current) placeNow(r.current, slot, skewAmount);
+      order.current.forEach((idx, slotIndex) => {
+        const el = refs[idx]?.current;
+        if (!el) return;
+        const slot = makeSlot(slotIndex, cardDistance, verticalDistance, refs.length);
+        placeNow(el, slot, skewAmount);
       });
 
       const tl = gsap.timeline();
@@ -286,6 +326,10 @@ const CardSwap = forwardRef(({
       });
 
       tl.addLabel('promote', `-=${config.durDrop * config.promoteOverlap}`);
+      tl.call(() => {
+        pendingActiveIndexRef.current = nextFront;
+        onCardChange?.(nextFront);
+      }, undefined, 'promote');
       rest.forEach((idx, i) => {
         const el = refs[idx].current;
         if (!el) return;
@@ -324,17 +368,29 @@ const CardSwap = forwardRef(({
       // Commit order after animation
       tl.call(() => {
         order.current = [...rest, front];
+        pendingActiveIndexRef.current = null;
       });
     },
-    
+
     animatePrevious: () => {
       if (order.current.length < 2) return;
+      if (tlRef.current?.isActive?.()) {
+        try {
+          tlRef.current.progress(1);
+        } catch (err) {
+          // ignore
+        }
+        tlRef.current.kill();
+        tlRef.current = null;
+        pendingActiveIndexRef.current = null;
+      }
 
       const [front, ...rest] = order.current;
       const back = order.current[order.current.length - 1];
 
       // Determine new front (back) and notify immediately, delay mutating order
       const nextFront = back;
+      pendingActiveIndexRef.current = nextFront;
       if (onCardChange) onCardChange(nextFront);
 
       // ensure back ref exists
@@ -347,9 +403,11 @@ const CardSwap = forwardRef(({
       }
 
       // ensure starting positions
-      refs.forEach((r, i) => {
-        const slot = makeSlot(i, cardDistance, verticalDistance, refs.length);
-        if (r?.current) placeNow(r.current, slot, skewAmount);
+      order.current.forEach((idx, slotIndex) => {
+        const el = refs[idx]?.current;
+        if (!el) return;
+        const slot = makeSlot(slotIndex, cardDistance, verticalDistance, refs.length);
+        placeNow(el, slot, skewAmount);
       });
 
       const elBack = refs[back].current;
@@ -397,6 +455,7 @@ const CardSwap = forwardRef(({
       // Commit order after animation
       tl.call(() => {
         order.current = [back, front, ...rest.slice(0, -1)];
+        pendingActiveIndexRef.current = null;
       });
     }
   }), [onCardChange, refs, cardDistance, verticalDistance, config, skewAmount]);

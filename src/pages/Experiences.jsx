@@ -1,35 +1,35 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import CardSwap, { Card } from '../components/CardSwap';
 import Folder from '../components/Folder';
 import FloatingBlobBackground from '../components/FloatingBlobBackground';
 import '../styles/pages.css';
 
 const Experiences = ({ projects = [], workExp = [], certificates = [] }) => {
-  const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [folderNavigation, setFolderNavigation] = useState(['root', 'work-exp']); // Default to work experience
   const [isHovered, setIsHovered] = useState(false);
   const infoSectionRef = useRef(null);
   const cardSwapRef = useRef(null);
   const folderContainerRef = useRef(null);
+  const projectsCount = projects.length;
+  const pauseOnHoverRefs = useMemo(() => [infoSectionRef], []);
 
   // Determine current view based on folder navigation
   const currentView = folderNavigation[folderNavigation.length - 1];
   const [currentExpIndex, setCurrentExpIndex] = useState(0);
   const [currentCertIndex, setCurrentCertIndex] = useState(0);
 
-  const handleCardChange = useCallback((cardIndex) => {
-    setCurrentCardIndex(cardIndex);
-  }, []);
-
   const handleNext = () => {
+    if (projectsCount < 2) return;
     cardSwapRef.current?.animateNext();
   };
 
   const handlePrevious = () => {
+    if (projectsCount < 2) return;
     cardSwapRef.current?.animatePrevious();
   };
 
-  const currentProject = projects[currentCardIndex];
+  const currentProject = projects[activeIndex];
 
   return (
     <div className="page experiences-page">
@@ -82,8 +82,8 @@ const Experiences = ({ projects = [], workExp = [], certificates = [] }) => {
               {projects.map((_, index) => (
                 <button
                   key={index}
-                  className={`experiences-indicator ${index === currentCardIndex ? 'active' : ''}`}
-                  onClick={() => setCurrentCardIndex(index)}
+                  className={`experiences-indicator ${index === activeIndex ? 'active' : ''}`}
+                  onClick={() => setActiveIndex(index)}
                   aria-label={`Go to project ${index + 1}`}
                 />
               ))}
@@ -104,13 +104,13 @@ const Experiences = ({ projects = [], workExp = [], certificates = [] }) => {
               ref={cardSwapRef}
               cardDistance={50}
               verticalDistance={60}
-              delay={10000}
-              pauseOnHover={true}
-              pauseOnHoverRefs={[infoSectionRef]}
+              delay={8000}
+              pauseOnHover={false}
+              pauseOnHoverRefs={pauseOnHoverRefs}
               width={580}
               height={420}
-              activeIndex={currentCardIndex}
-              onCardChange={handleCardChange}
+              activeIndex={activeIndex}
+              onCardChange={setActiveIndex}
             >
               {projects.map((project) => (
                 <Card key={project.name}>
