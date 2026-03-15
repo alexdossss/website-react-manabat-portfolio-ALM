@@ -90,7 +90,7 @@ const CardSwap = forwardRef(({
       // If an animation is currently running:
       // - Ignore the update if it's the index we just animated to.
       // - Otherwise, interrupt the animation and snap to the requested index.
-      if (tlRef.current?.isActive?.()) {
+      if (tlRef.current) {
         if (pendingActiveIndexRef.current === activeIndex) {
           lastActiveIndexRef.current = activeIndex;
           return;
@@ -388,10 +388,9 @@ const CardSwap = forwardRef(({
       const [front, ...rest] = order.current;
       const back = order.current[order.current.length - 1];
 
-      // Determine new front (back) and notify immediately, delay mutating order
+      // Determine new front (back). Notify when the reverse animation starts so React
+      // doesn't snap the stack to the new index before GSAP animates.
       const nextFront = back;
-      pendingActiveIndexRef.current = nextFront;
-      if (onCardChange) onCardChange(nextFront);
 
       // ensure back ref exists
       if (!refs[back]?.current) return;
@@ -414,43 +413,56 @@ const CardSwap = forwardRef(({
       const tl = gsap.timeline();
       tlRef.current = tl;
 
-      // Bring back card to front with reverse animation
+      // Reverse of Next:
+      // 1) Lift the back card up (mirror of front dropping down)
+      // 2) Shift the stack backward while the lift is happening (mirrors "promote")
+      // 3) Settle the lifted card into the front slot (mirrors "return")
       const frontSlot = makeSlot(0, cardDistance, verticalDistance, refs.length);
       tl.set(elBack, { zIndex: refs.length + 1 });
+      tl.to(elBack, {
+        y: '-=500',
+        duration: config.durDrop,
+        ease: config.ease
+      });
 
-      // Animate back card rising and moving to front
-      tl.to(
-        elBack,
-        {
-          x: frontSlot.x,
-          y: frontSlot.y,
-          z: frontSlot.z,
-          duration: config.durMove,
-          ease: config.ease
-        },
-        0
-      );
+      tl.addLabel('promote', `-=${config.durDrop * config.promoteOverlap}`);
+      tl.call(() => {
+        pendingActiveIndexRef.current = nextFront;
+        onCardChange?.(nextFront);
+      }, undefined, 'promote');
 
-      // Animate front and other cards moving backward
-      tl.addLabel('shift', 0);
       const shiftOrder = [front, ...rest.slice(0, -1)];
       shiftOrder.forEach((idx, i) => {
-        const el = refs[idx].current;
+        const el = refs[idx]?.current;
         if (!el) return;
         const slot = makeSlot(i + 1, cardDistance, verticalDistance, refs.length);
+        tl.set(el, { zIndex: slot.zIndex }, 'promote');
         tl.to(
           el,
           {
             x: slot.x,
             y: slot.y,
             z: slot.z,
-            zIndex: slot.zIndex,
             duration: config.durMove,
             ease: config.ease
           },
-          `shift+=${i * 0.12}`
+          `promote+=${i * 0.12}`
         );
       });
+
+      tl.addLabel('return', `promote+=${config.durMove * config.returnDelay}`);
+      tl.call(() => gsap.set(elBack, { zIndex: frontSlot.zIndex }), undefined, 'return');
+      tl.to(
+        elBack,
+        {
+          x: frontSlot.x,
+          y: frontSlot.y,
+          z: frontSlot.z,
+          duration: config.durReturn,
+          ease: config.ease
+        },
+        'return'
+      );
 
       // Commit order after animation
       tl.call(() => {
