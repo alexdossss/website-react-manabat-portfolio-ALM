@@ -2720,6 +2720,73 @@ canvas {
     width: 100%;
     max-width: 900px;
   }
+
+  .page.contact-page {
+    padding: 80px 20px 60px;
+  }
+
+  .page.contact-page .contact-content {
+    width: 100%;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .page.contact-page .contact-top-side {
+    width: 100%;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
+  }
+
+  .page.contact-page .header-h1-h2-layered {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .page.contact-page .header-h1-h2-layered h1 {
+    white-space: normal;
+  }
+
+  .page.contact-page .header-h1-h2-layered h2 {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .page.contact-page .contact-description {
+    width: 100%;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+
+  .page.contact-page .contact-form-and-info {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 32px;
+  }
+
+  .page.contact-page .contact-content .form-info {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .page.contact-page .contact-form {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .page.contact-page .contact-info {
+    width: 100%;
+    min-width: 0;
+    padding-left: 0;
+  }
+
+  .page.contact-page .info-item p {
+    width: auto;
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -2871,6 +2938,73 @@ canvas {
   .page.blogs-page .blog-post-card {
     width: 100%;
     max-width: 720px;
+  }
+
+  .page.contact-page .contact-content {
+    width: 100%;
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .page.contact-page .contact-top-side {
+    width: 100%;
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
+  }
+
+  .page.contact-page .header-h1-h2-layered {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .page.contact-page .header-h1-h2-layered h1 {
+    white-space: normal;
+  }
+
+  .page.contact-page .header-h1-h2-layered h2 {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .page.contact-page .contact-description {
+    width: 100%;
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+
+  .page.contact-page .contact-form-and-info {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 28px;
+  }
+
+  .page.contact-page .contact-content .form-info {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .page.contact-page .contact-form {
+    width: 100%;
+    min-width: 0;
+    padding: 30px 24px;
+  }
+
+  .page.contact-page .contact-info {
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .info-item{
+    width: 20em;
   }
 
   .hero-cta {
@@ -3155,6 +3289,19 @@ canvas {
   .page.about-page .desc-education .header-h1-h2-layered h2 {
     font-size: 34px;
     bottom: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .page.contact-page .header-h1-h2-layered h1 {
+    font-size: 56px;
+    white-space: normal;
+  }
+
+  .page.contact-page .header-h1-h2-layered h2 {
+    font-size: 34px;
     left: 50%;
     transform: translateX(-50%);
   }
@@ -3542,7 +3689,7 @@ canvas {
     height: 100%;
     z-index: 1;
     pointer-events: auto;
-    --lanyard-rope-width: 1.4;
+    --lanyard-rope-width: 1;
     --lanyard-hit-scale: 1.25;
   }
 
@@ -3945,6 +4092,57 @@ canvas {
     max-width: 100%;
   }
 
+  .page.contact-page {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .page.contact-page .contact-top-side {
+    width: 100%;
+    max-width: 100%;
+    align-items: center;
+  }
+
+  .page.contact-page .header-h1-h2-layered {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .page.contact-page .header-h1-h2-layered h1 {
+    white-space: normal;
+  }
+
+  .page.contact-page .header-h1-h2-layered h2 {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .page.contact-page .contact-content {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .page.contact-page .contact-form-and-info {
+    align-items: stretch;
+  }
+
+  .page.contact-page .contact-content .form-info {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .page.contact-page .contact-form {
+    width: 100%;
+    min-width: 0;
+    padding: 24px 18px;
+  }
+
+  .page.contact-page .contact-info {
+    width: 100%;
+    min-width: 0;
+    padding-left: 0;
+  }
+
   .blog-detail-title-section .blog-category{
     padding: 5px 10px;
     font-size: 10px;
@@ -3954,6 +4152,20 @@ canvas {
     margin-top: 40px;
   }
   
+}
+
+@media screen and (max-width: 480px) {
+  .about-page .lanyard-wrapper {
+    --lanyard-rope-width: 0.7;
+  }
+
+  .page.contact-page .header-h1-h2-layered h1 {
+    font-size: 32px;
+  }
+
+  .page.contact-page .header-h1-h2-layered h2 {
+    font-size: 22px;
+  }
 }
 
 @media screen and (max-width: 450px) {
@@ -4823,3 +5035,8 @@ canvas {
 
 }
 
+@media screen and (min-width: 491px) and (max-width: 768px) {
+  .about-page .lanyard-wrapper {
+    --lanyard-rope-width: 1;
+  }
+}
