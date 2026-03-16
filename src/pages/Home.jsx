@@ -148,7 +148,7 @@ const Home = ({ codingLanguages, projects, certificates, workExp }) => {
         <Link to="/about" className="bento-item bento-profile" ref={(el) => (bentoItemsRef.current[0] = el)}>
           <div className="bento-spotlight"></div>
           <div className="bento-stars"></div>
-          <div className="profile-placeholder"></div>
+          <img src="/images/manabat_picture.jpg" alt="Alexander Manabat" className="profile-image profile-placeholder" />
           
           <div className="profile-text-content">
             <p className="profile-subtitle">WEBSITE DEVELOPER &<br />UI / UX DESIGNER</p>
