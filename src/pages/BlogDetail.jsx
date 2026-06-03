@@ -3,10 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import FloatingBlobBackground from '../components/FloatingBlobBackground';
 import '../styles/pages.css';
 
-const BlogDetail = () => {
-  const { id } = useParams();
-
-   const blogContent = {
+const blogContent = {
     'dashboard-interface': {
       title: 'Designing an Intuitive Dashboard Interface',
       date: 'February 23, 2026',
@@ -112,7 +109,10 @@ const BlogDetail = () => {
             <p>UI and UX design became an essential part of my growth as a developer. It taught me that building applications is not only about making features work, but also about making users feel comfortable and confident while using them. As I continue developing projects, I see UI/UX as an ongoing learning process where each experience improves my ability to create interfaces that are both functional and meaningful.</p>
       `
     }
-  };
+};
+
+const BlogDetail = () => {
+  const { id } = useParams();
 
   const blog = blogContent[id];
 
@@ -153,4 +153,4 @@ const BlogDetail = () => {
   );
 };
 
-export default BlogDetail;
+export default React.memo(BlogDetail);

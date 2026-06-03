@@ -3,6 +3,14 @@ import { Link, useLocation } from 'react-router-dom';
 import { gsap } from 'gsap';
 import '../styles/header.css';
 
+const navItems = [
+  { path: '/', label: 'Home' },
+  { path: '/about', label: 'About' },
+  { path: '/experiences', label: 'Experiences' },
+  { path: '/blogs', label: 'Blogs' },
+  { path: '/contact', label: 'Contact' }
+];
+
 const Header = () => {
   const location = useLocation();
   const [isCompactNav, setIsCompactNav] = useState(false);
@@ -15,14 +23,6 @@ const Header = () => {
   const itemRefs = useRef([]);
   const tlRef = useRef(null);
   const hasOpenedRef = useRef(false);
-
-  const navItems = [
-    { path: '/', label: 'Home' },
-    { path: '/about', label: 'About' },
-    { path: '/experiences', label: 'Experiences' },
-    { path: '/blogs', label: 'Blogs' },
-    { path: '/contact', label: 'Contact' }
-  ];
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 1024px)');
@@ -248,4 +248,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default React.memo(Header);

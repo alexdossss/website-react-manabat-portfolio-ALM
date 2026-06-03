@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Folder.css';
 
 const darkenColor = (hex, percent) => {
@@ -146,4 +146,4 @@ const Folder = ({
   );
 };
 
-export default Folder;
+export default React.memo(Folder);

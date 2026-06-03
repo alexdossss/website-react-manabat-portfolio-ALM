@@ -90,4 +90,4 @@ const LogoLoop = ({ languages, direction = 'right', speed = 30, gap = 65, logoHe
   );
 };
 
-export default LogoLoop;
+export default React.memo(LogoLoop);

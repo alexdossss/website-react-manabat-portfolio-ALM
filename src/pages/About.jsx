@@ -8,21 +8,28 @@ const About = ({ codingLanguages, skills }) => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
+    let ticking = false;
     const handleMouseMove = (e) => {
-      const cards = document.querySelectorAll('.sanlorenzo, .holyangeluni');
-      
-      cards.forEach(card => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        
-        // Calculate percentage position for the gradient
-        const xPercent = (x / rect.width) * 100;
-        const yPercent = (y / rect.height) * 100;
-        
-        card.style.setProperty('--mouse-x', `${xPercent}%`);
-        card.style.setProperty('--mouse-y', `${yPercent}%`);
-      });
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const cards = document.querySelectorAll('.sanlorenzo, .holyangeluni');
+          
+          cards.forEach(card => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            // Calculate percentage position for the gradient
+            const xPercent = (x / rect.width) * 100;
+            const yPercent = (y / rect.height) * 100;
+            
+            card.style.setProperty('--mouse-x', `${xPercent}%`);
+            card.style.setProperty('--mouse-y', `${yPercent}%`);
+          });
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -164,4 +171,4 @@ const About = ({ codingLanguages, skills }) => {
   );
 };
 
-export default About;
+export default React.memo(About);

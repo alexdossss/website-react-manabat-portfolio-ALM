@@ -32,51 +32,52 @@ const Home = ({ codingLanguages, projects, certificates, workExp }) => {
   }, [projects, certificates, isHovering]);
 
   useEffect(() => {
+    let ticking = false;
     const handleMouseMove = (e) => {
-      // 1. TOOLTIP LOGIC: Detect if hovering over a link
-      const hoveredItem = e.target.closest('a.bento-item');
-      if (hoveredItem) {
-        const path = hoveredItem.getAttribute('href');
-        // Clean up path name for the label (e.g., /about -> about)
-        const labelName = path.replace('/', '') || 'home';
-        setCursorData({
-          x: e.clientX,
-          y: e.clientY,
-          label: `view ${labelName}`,
-          visible: true
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const hoveredItem = e.target.closest('a.bento-item');
+          if (hoveredItem) {
+            const path = hoveredItem.getAttribute('href');
+            const labelName = path.replace('/', '') || 'home';
+            setCursorData({
+              x: e.clientX,
+              y: e.clientY,
+              label: `view ${labelName}`,
+              visible: true
+            });
+          } else {
+            setCursorData(prev => prev.visible ? { ...prev, visible: false } : prev);
+          }
+
+          bentoItemsRef.current.forEach((item) => {
+            if (!item) return;
+
+            const rect = item.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            item.style.setProperty('--mouse-x', `${x}px`);
+            item.style.setProperty('--mouse-y', `${y}px`);
+
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const tX = ((x - centerX) / centerX) * 8;
+            const tY = ((y - centerY) / centerY) * 8;
+
+            const rotateX = ((y - centerY) / centerY) * 10; 
+            const rotateY = ((centerX - x) / centerX) * 10;
+
+            item.style.setProperty('--rotate-x', `${rotateX}deg`);
+            item.style.setProperty('--rotate-y', `${rotateY}deg`);
+            item.style.setProperty('--t-x', `${tX}px`);
+            item.style.setProperty('--t-y', `${tY}px`);
+          });
+          ticking = false;
         });
-      } else {
-        setCursorData(prev => ({ ...prev, visible: false }));
+        ticking = true;
       }
-
-      // 2. BENTO EFFECTS: Spotlight, Tilt, and Magnetism
-      bentoItemsRef.current.forEach((item) => {
-        if (!item) return;
-
-        const rect = item.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        // Update Mouse Position for Spotlight & Border Glow
-        item.style.setProperty('--mouse-x', `${x}px`);
-        item.style.setProperty('--mouse-y', `${y}px`);
-
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-
-        // Magnetism: Subtle translation towards mouse
-        const tX = ((x - centerX) / centerX) * 8;
-        const tY = ((y - centerY) / centerY) * 8;
-
-        // Tilt: Rotation based on mouse position
-        const rotateX = ((y - centerY) / centerY) * 10; 
-        const rotateY = ((centerX - x) / centerX) * 10;
-
-        item.style.setProperty('--rotate-x', `${rotateX}deg`);
-        item.style.setProperty('--rotate-y', `${rotateY}deg`);
-        item.style.setProperty('--t-x', `${tX}px`);
-        item.style.setProperty('--t-y', `${tY}px`);
-      });
     };
 
     const handleMouseLeave = () => {
@@ -298,4 +299,4 @@ const Home = ({ codingLanguages, projects, certificates, workExp }) => {
   );
 };
 
-export default Home;
+export default React.memo(Home);

@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState, useCallback } from 'react';
 import CardSwap, { Card } from '../components/CardSwap';
 import Folder from '../components/Folder';
 import FloatingBlobBackground from '../components/FloatingBlobBackground';
@@ -19,15 +19,15 @@ const Experiences = ({ projects = [], workExp = [], certificates = [] }) => {
   const [currentExpIndex, setCurrentExpIndex] = useState(0);
   const [currentCertIndex, setCurrentCertIndex] = useState(0);
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     if (projectsCount < 2) return;
     cardSwapRef.current?.animateNext();
-  };
+  }, [projectsCount]);
 
-  const handlePrevious = () => {
+  const handlePrevious = useCallback(() => {
     if (projectsCount < 2) return;
     cardSwapRef.current?.animatePrevious();
-  };
+  }, [projectsCount]);
 
   const currentProject = projects[activeIndex];
 
@@ -297,4 +297,4 @@ const Experiences = ({ projects = [], workExp = [], certificates = [] }) => {
   );
 };
 
-export default Experiences;
+export default React.memo(Experiences);

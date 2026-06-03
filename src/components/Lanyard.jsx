@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unknown-property */
 'use client';
-import { useEffect, useRef, useState, useMemo, Suspense } from 'react';
+import React, { useEffect, useRef, useState, useMemo, Suspense } from 'react';
 import { Canvas, extend, useFrame, useLoader } from '@react-three/fiber';
 import { Environment, Lightformer } from '@react-three/drei';
 import { BallCollider, CuboidCollider, Physics, RigidBody, useRopeJoint, useSphericalJoint } from '@react-three/rapier';
@@ -11,7 +11,7 @@ import './Lanyard.css';
 
 extend({ MeshLineGeometry, MeshLineMaterial });
 
-export default function Lanyard({ position = [0, 0, 20], gravity = [0, -40, 0], fov = 20, transparent = true }) {
+function Lanyard({ position = [0, 0, 20], gravity = [0, -40, 0], fov = 20, transparent = true }) {
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
   const wrapperRef = useRef(null);
   const [ropeWidth, setRopeWidth] = useState(2.5);
@@ -250,3 +250,5 @@ function createLanyardTexture() {
   
   return canvas;
 }
+
+export default React.memo(Lanyard);

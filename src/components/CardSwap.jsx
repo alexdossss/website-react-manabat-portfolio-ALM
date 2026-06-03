@@ -554,4 +554,4 @@ const CardSwap = forwardRef(({
 });
 CardSwap.displayName = 'CardSwap';
 
-export default CardSwap;
+export default React.memo(CardSwap);

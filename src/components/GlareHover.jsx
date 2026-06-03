@@ -1,5 +1,5 @@
 import '../styles/GlareHover.css';
-import { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 
 const GlareHover = ({
   width = '500px',
@@ -83,4 +83,4 @@ const GlareHover = ({
   );
 };
 
-export default GlareHover;
+export default React.memo(GlareHover);

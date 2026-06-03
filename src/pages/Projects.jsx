@@ -2,57 +2,59 @@ import React from 'react';
 import FloatingBlobBackground from '../components/FloatingBlobBackground';
 import '../styles/pages.css';
 
+const projects = [
+  {
+    id: 1,
+    title: 'PureStrength Labs',
+    description: 'A comprehensive fitness and exercise application with modern UI/UX design and responsive layout.',
+    technologies: ['React', 'JavaScript', 'CSS3', 'UI/UX Design'],
+    image: 'PureStrength Labs',
+    link: '#',
+  },
+  {
+    id: 2,
+    title: 'Responsive Portfolio Website',
+    description: 'Personal portfolio website showcasing projects and skills with a modern design approach.',
+    technologies: ['React', 'Vite', 'Responsive Design'],
+    image: 'Portfolio',
+    link: '#',
+  },
+  {
+    id: 3,
+    title: 'Web App Dashboard',
+    description: 'Interactive dashboard application with data visualization and user-friendly interface.',
+    technologies: ['React', 'JavaScript', 'HTML5', 'CSS3'],
+    image: 'Dashboard',
+    link: '#',
+  },
+  {
+    id: 4,
+    title: 'E-Commerce Platform',
+    description: 'Modern e-commerce solution with responsive design and smooth user experience.',
+    technologies: ['React', 'Node.js', 'UI Design'],
+    image: 'E-Commerce',
+    link: '#',
+  },
+  {
+    id: 5,
+    title: 'Marketing Website',
+    description: 'Professional marketing website with engaging design and effective call-to-action elements.',
+    technologies: ['HTML5', 'CSS3', 'JavaScript', 'Design'],
+    image: 'Marketing',
+    link: '#',
+  },
+  {
+    id: 6,
+    title: 'Mobile-First Application',
+    description: 'Responsive web application designed with mobile-first approach for optimal user experience.',
+    technologies: ['React', 'Responsive Design', 'JavaScript'],
+    image: 'Mobile App',
+    link: '#',
+  },
+];
+
 const Projects = () => {
-  const projects = [
-    {
-      id: 1,
-      title: 'PureStrength Labs',
-      description: 'A comprehensive fitness and exercise application with modern UI/UX design and responsive layout.',
-      technologies: ['React', 'JavaScript', 'CSS3', 'UI/UX Design'],
-      image: 'PureStrength Labs',
-      link: '#',
-    },
-    {
-      id: 2,
-      title: 'Responsive Portfolio Website',
-      description: 'Personal portfolio website showcasing projects and skills with a modern design approach.',
-      technologies: ['React', 'Vite', 'Responsive Design'],
-      image: 'Portfolio',
-      link: '#',
-    },
-    {
-      id: 3,
-      title: 'Web App Dashboard',
-      description: 'Interactive dashboard application with data visualization and user-friendly interface.',
-      technologies: ['React', 'JavaScript', 'HTML5', 'CSS3'],
-      image: 'Dashboard',
-      link: '#',
-    },
-    {
-      id: 4,
-      title: 'E-Commerce Platform',
-      description: 'Modern e-commerce solution with responsive design and smooth user experience.',
-      technologies: ['React', 'Node.js', 'UI Design'],
-      image: 'E-Commerce',
-      link: '#',
-    },
-    {
-      id: 5,
-      title: 'Marketing Website',
-      description: 'Professional marketing website with engaging design and effective call-to-action elements.',
-      technologies: ['HTML5', 'CSS3', 'JavaScript', 'Design'],
-      image: 'Marketing',
-      link: '#',
-    },
-    {
-      id: 6,
-      title: 'Mobile-First Application',
-      description: 'Responsive web application designed with mobile-first approach for optimal user experience.',
-      technologies: ['React', 'Responsive Design', 'JavaScript'],
-      image: 'Mobile App',
-      link: '#',
-    },
-  ];
+
 
   return (
     <div className="page projects-page">
@@ -92,4 +94,4 @@ const Projects = () => {
   );
 };
 
-export default Projects;
+export default React.memo(Projects);

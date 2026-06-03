@@ -3,20 +3,20 @@ import { Link, useLocation } from 'react-router-dom';
 import { gsap } from 'gsap';
 import '../styles/navbar.css';
 
+const navItems = [
+  { path: '/', label: 'Home' },
+  { path: '/about', label: 'About' },
+  { path: '/experiences', label: 'Experiences' },
+  { path: '/blogs', label: 'Blogs' },
+  { path: '/contact', label: 'Contact' }
+];
+
 const Navbar = () => {
   const location = useLocation();
   const labelRefs = useRef([]);
   const hoverLabelRefs = useRef([]);
   const tlRefs = useRef([]);
   const activeTweenRefs = useRef([]);
-
-  const navItems = [
-    { path: '/', label: 'Home' },
-    { path: '/about', label: 'About' },
-    { path: '/experiences', label: 'Experiences' },
-    { path: '/blogs', label: 'Blogs' },
-    { path: '/contact', label: 'Contact' }
-  ];
 
   const isActive = (path) => {
     return location.pathname === path;
@@ -118,4 +118,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default React.memo(Navbar);

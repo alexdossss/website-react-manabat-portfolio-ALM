@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useForm } from '@formspree/react';
 import FloatingBlobBackground from '../components/FloatingBlobBackground';
 import GlareHover from '../components/GlareHover';
@@ -13,21 +13,21 @@ const Contact = () => {
     message: '',
   });
 
-  const handleChange = (e) => {
+  const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
-  };
+  }, []);
 
-  const onSubmit = async (e) => {
+  const onSubmit = useCallback(async (e) => {
     e.preventDefault();
     await handleSubmit(e);
     if (state.succeeded) {
       setFormData({ name: '', email: '', subject: '', message: '' });
     }
-  };
+  }, [handleSubmit, state.succeeded]);
 
   return (
     <div className="page contact-page">
@@ -138,4 +138,4 @@ const Contact = () => {
   );
 };
 
-export default Contact;
+export default React.memo(Contact);

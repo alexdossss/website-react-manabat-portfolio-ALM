@@ -7,15 +7,25 @@ const MagneticCard = ({ children, post }) => {
   const cardRef = useRef(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
+  let ticking = false;
   const handleMouseMove = (e) => {
-    if (!cardRef.current) return;
-    const { left, top, width, height } = cardRef.current.getBoundingClientRect();
-    
-    // Calculate distance from center
-    const x = (e.clientX - (left + width / 2)) * 0.15; // Strength multiplier
-    const y = (e.clientY - (top + height / 2)) * 0.15;
-    
-    setPosition({ x, y });
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        if (!cardRef.current) {
+          ticking = false;
+          return;
+        }
+        const { left, top, width, height } = cardRef.current.getBoundingClientRect();
+        
+        // Calculate distance from center
+        const x = (e.clientX - (left + width / 2)) * 0.15; // Strength multiplier
+        const y = (e.clientY - (top + height / 2)) * 0.15;
+        
+        setPosition({ x, y });
+        ticking = false;
+      });
+      ticking = true;
+    }
   };
 
   const handleMouseLeave = () => {
@@ -38,27 +48,28 @@ const MagneticCard = ({ children, post }) => {
   );
 };
 
+const blogs = [
+  {
+    id: 'dashboard-interface',
+    title: 'Designing an Intuitive Dashboard Interface',
+    category: 'UI/UX Design',
+    excerpt: 'Learn the best practices for creating dashboard interfaces that are intuitive and user-friendly. Explore layout patterns, information hierarchy, and interactive elements that enhance user experience.',
+    image: '/images/blogs/Dashboard_Cover.jpg',
+    date: 'February 23, 2026',
+    readTime: '4 min read'
+  },
+  {
+    id: 'ui-ux-design',
+    title: 'UI and UX Designing',
+    category: 'Learning',
+    excerpt: 'Essential UI and UX design principles beginners should know. Master the fundamentals of visual design, user research, and interaction design to create compelling digital experiences.',
+    image: '/images/blogs/UI_UX_Desigining.jpg',
+    date: 'February 23, 2026',
+    readTime: '6 min read'
+  }
+];
+
 const Blogs = () => {
-  const blogs = [
-    {
-      id: 'dashboard-interface',
-      title: 'Designing an Intuitive Dashboard Interface',
-      category: 'UI/UX Design',
-      excerpt: 'Learn the best practices for creating dashboard interfaces that are intuitive and user-friendly. Explore layout patterns, information hierarchy, and interactive elements that enhance user experience.',
-      image: '/images/blogs/Dashboard_Cover.jpg',
-      date: 'February 23, 2026',
-      readTime: '4 min read'
-    },
-    {
-      id: 'ui-ux-design',
-      title: 'UI and UX Designing',
-      category: 'Learning',
-      excerpt: 'Essential UI and UX design principles beginners should know. Master the fundamentals of visual design, user research, and interaction design to create compelling digital experiences.',
-      image: '/images/blogs/UI_UX_Desigining.jpg',
-      date: 'February 23, 2026',
-      readTime: '6 min read'
-    }
-  ];
 
   return (
     <div className="page blogs-page">
@@ -95,4 +106,4 @@ const Blogs = () => {
   );
 };
 
-export default Blogs;
+export default React.memo(Blogs);
