@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import FloatingBlobBackground from '../components/FloatingBlobBackground';
 import '../styles/pages.css';
 
 const blogContent = {
@@ -114,7 +113,7 @@ const blogContent = {
 const BlogDetail = () => {
   const { id } = useParams();
 
-  const blog = blogContent[id];
+  const blog = useMemo(() => blogContent[id], [id]);
 
   if (!blog) {
     return (
@@ -130,7 +129,6 @@ const BlogDetail = () => {
   
   return (
     <div className="page blog-detail-page">
-      <FloatingBlobBackground />
       <article className="blog-detail">
         <header className="blog-detail-header">
           <Link to="/blogs" className="back-link">
@@ -146,7 +144,7 @@ const BlogDetail = () => {
             <span className="blog-read-time">{blog.readTime}</span>
           </div>
         </header>
-        <img src={blog.image} alt={blog.title} className="blog-detail-image" />
+        <img src={blog.image} alt={blog.title} className="blog-detail-image" loading="eager" decoding="async" />
         <div className="blog-detail-content" dangerouslySetInnerHTML={{ __html: blog.content }} />
       </article>
     </div>

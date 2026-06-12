@@ -25,6 +25,7 @@
   gap: 90px;
   animation: scroll linear infinite;
   animation-duration: var(--animation-duration, 50s);
+  animation-direction: var(--scroll-direction, normal);
   animation-play-state: running;
 }
 

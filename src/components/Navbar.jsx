@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { gsap } from 'gsap';
 import '../styles/navbar.css';
@@ -17,10 +17,29 @@ const Navbar = () => {
   const hoverLabelRefs = useRef([]);
   const tlRefs = useRef([]);
   const activeTweenRefs = useRef([]);
+  const linkRefs = useRef([]);
+  
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [activeIndicatorStyle, setActiveIndicatorStyle] = useState({});
+  const [hoverIndicatorStyle, setHoverIndicatorStyle] = useState({});
 
-  const isActive = (path) => {
-    return location.pathname === path;
-  };
+  const activeIndex = useMemo(() => {
+    return navItems.findIndex(item => location.pathname === item.path);
+  }, [location.pathname]);
+
+  const updateActiveIndicator = useCallback(() => {
+    if (activeIndex === -1 || !linkRefs.current[activeIndex]) {
+      setActiveIndicatorStyle({ opacity: 0 });
+      return;
+    }
+
+    const link = linkRefs.current[activeIndex];
+    setActiveIndicatorStyle({
+      left: `${link.offsetLeft}px`,
+      width: `${link.offsetWidth}px`,
+      opacity: 1,
+    });
+  }, [activeIndex]);
 
   useEffect(() => {
     const layoutLabels = () => {
@@ -41,11 +60,11 @@ const Navbar = () => {
         const tl = gsap.timeline({ paused: true });
 
         if (label) {
-          tl.to(label, { y: -(h + 8), duration: 0.4, ease: 'power3.easeOut', overwrite: 'auto' }, 0);
+          tl.to(label, { y: -(h + 8), duration: 0.4, ease: 'power2.easeOut', overwrite: 'auto' }, 0);
         }
 
         if (hoverLabel) {
-          tl.to(hoverLabel, { y: 0, opacity: 1, duration: 0.4, ease: 'power3.easeOut', overwrite: 'auto' }, 0);
+          tl.to(hoverLabel, { y: 0, opacity: 1, duration: 0.4, ease: 'power2.easeOut', overwrite: 'auto' }, 0);
         }
 
         tlRefs.current[index] = tl;
@@ -60,24 +79,52 @@ const Navbar = () => {
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
+  useLayoutEffect(() => {
+    const frameId = requestAnimationFrame(updateActiveIndicator);
+    document.fonts?.ready?.then(updateActiveIndicator);
+    window.addEventListener('resize', updateActiveIndicator);
+
+    return () => {
+      cancelAnimationFrame(frameId);
+      window.removeEventListener('resize', updateActiveIndicator);
+    };
+  }, [updateActiveIndicator]);
+
+  useEffect(() => {
+    if (hoveredIndex !== null && linkRefs.current[hoveredIndex]) {
+      const link = linkRefs.current[hoveredIndex];
+      setHoverIndicatorStyle({
+        left: `${link.offsetLeft}px`,
+        width: `${link.offsetWidth}px`,
+        opacity: 1,
+      });
+    } else {
+      setHoverIndicatorStyle({
+        opacity: 0,
+      });
+    }
+  }, [hoveredIndex]);
+
   const handleEnter = (index) => {
+    setHoveredIndex(index);
     const tl = tlRefs.current[index];
     if (!tl) return;
     activeTweenRefs.current[index]?.kill();
     activeTweenRefs.current[index] = tl.tweenTo(tl.duration(), {
-      duration: 0.3,
-      ease: 'power3.easeOut',
+      duration: 0.4,
+      ease: 'power2.easeOut',
       overwrite: 'auto'
     });
   };
 
   const handleLeave = (index) => {
+    setHoveredIndex(null);
     const tl = tlRefs.current[index];
     if (!tl) return;
     activeTweenRefs.current[index]?.kill();
     activeTweenRefs.current[index] = tl.tweenTo(0, {
-      duration: 0.2,
-      ease: 'power3.easeOut',
+      duration: 0.3,
+      ease: 'power2.easeOut',
       overwrite: 'auto'
     });
   };
@@ -85,11 +132,16 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
+        <div className="navbar-indicator navbar-indicator-active" style={activeIndicatorStyle} />
+        <div className="navbar-indicator navbar-indicator-hover" style={hoverIndicatorStyle} />
         {navItems.map((item, index) => (
           <Link
             key={item.path}
             to={item.path}
-            className={`nav-link ${isActive(item.path) ? 'active' : ''}`}
+            className={`nav-link ${activeIndex === index ? 'active' : ''}`}
+            ref={(el) => {
+              linkRefs.current[index] = el;
+            }}
             onMouseEnter={() => handleEnter(index)}
             onMouseLeave={() => handleLeave(index)}
           >

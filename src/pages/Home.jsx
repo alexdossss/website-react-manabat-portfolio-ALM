@@ -1,91 +1,112 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import LogoLoop from '../components/LogoLoop';
-import FloatingBlobBackground from '../components/FloatingBlobBackground';
 import '../styles/pages.css';
 
 const Home = ({ codingLanguages, projects, certificates, workExp }) => {
   const bentoItemsRef = useRef([]);
-  // State for the custom cursor tooltip
-  const [cursorData, setCursorData] = useState({ x: 0, y: 0, label: '', visible: false });
-  // State for carousel cycling
+  const tooltipRef = useRef(null);
+  const tickingRef = useRef(false);
+  const hoveringRef = useRef(false);
   const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
   const [currentCertIndex, setCurrentCertIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
 
+  const projectsList = useMemo(() => projects ?? [], [projects]);
+  const certificatesList = useMemo(() => certificates ?? [], [certificates]);
+  const workExperience = useMemo(() => workExp?.[0] ?? null, [workExp]);
+  const currentProject = projectsList.length > 0 ? projectsList[currentProjectIndex % projectsList.length] : null;
+  const currentCertificate = certificatesList.length > 0 ? certificatesList[currentCertIndex % certificatesList.length] : null;
+  const currentCertificateTitle = useMemo(() => (
+    currentCertificate
+      ? currentCertificate.title
+          .replace(' CERTIFICATION', '')
+          .replace(' Certification', '')
+          .split(' ')
+          .slice(0, 4)
+          .join(' ')
+      : ''
+  ), [currentCertificate]);
 
-
-  // Carousel effect - cycle every 10 seconds (paused on hover)
   useEffect(() => {
-    if (isHovering) return; // Don't cycle when hovering
-    
+    if (isHovering || (projectsList.length < 2 && certificatesList.length < 2)) return;
+
     const carouselInterval = setInterval(() => {
-      setCurrentProjectIndex((prevIndex) => 
-        projects && projects.length > 0 ? (prevIndex + 1) % projects.length : 0
+      setCurrentProjectIndex((previousIndex) =>
+        projectsList.length > 0 ? (previousIndex + 1) % projectsList.length : 0
       );
-      setCurrentCertIndex((prevIndex) => 
-        certificates && certificates.length > 0 ? (prevIndex + 1) % certificates.length : 0
+      setCurrentCertIndex((previousIndex) =>
+        certificatesList.length > 0 ? (previousIndex + 1) % certificatesList.length : 0
       );
     }, 950);
 
     return () => clearInterval(carouselInterval);
-  }, [projects, certificates, isHovering]);
+  }, [projectsList.length, certificatesList.length, isHovering]);
 
   useEffect(() => {
-    let ticking = false;
-    const handleMouseMove = (e) => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const hoveredItem = e.target.closest('a.bento-item');
-          if (hoveredItem) {
-            const path = hoveredItem.getAttribute('href');
-            const labelName = path.replace('/', '') || 'home';
-            setCursorData({
-              x: e.clientX,
-              y: e.clientY,
-              label: `view ${labelName}`,
-              visible: true
-            });
-          } else {
-            setCursorData(prev => prev.visible ? { ...prev, visible: false } : prev);
-          }
+    const setHovering = (nextValue) => {
+      if (hoveringRef.current === nextValue) return;
+      hoveringRef.current = nextValue;
+      setIsHovering(nextValue);
+    };
 
-          bentoItemsRef.current.forEach((item) => {
-            if (!item) return;
+    const hideTooltip = () => {
+      const tooltip = tooltipRef.current;
+      if (!tooltip) return;
+      tooltip.classList.remove('active');
+    };
 
-            const rect = item.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+    const handleMouseMove = (event) => {
+      if (tickingRef.current) return;
 
-            item.style.setProperty('--mouse-x', `${x}px`);
-            item.style.setProperty('--mouse-y', `${y}px`);
+      tickingRef.current = true;
 
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
+      window.requestAnimationFrame(() => {
+        const hoveredItem = event.target.closest('a.bento-item');
+        const tooltip = tooltipRef.current;
 
-            const tX = ((x - centerX) / centerX) * 8;
-            const tY = ((y - centerY) / centerY) * 8;
+        if (hoveredItem && tooltip) {
+          const path = hoveredItem.getAttribute('href');
+          const labelName = path.replace('/', '') || 'home';
+          tooltip.textContent = `view ${labelName}`;
+          tooltip.style.left = `${event.clientX}px`;
+          tooltip.style.top = `${event.clientY}px`;
+          tooltip.classList.add('active');
+          setHovering(true);
+        } else {
+          hideTooltip();
+          setHovering(false);
+        }
 
-            const rotateX = ((y - centerY) / centerY) * 10; 
-            const rotateY = ((centerX - x) / centerX) * 10;
+        bentoItemsRef.current.forEach((item) => {
+          if (!item) return;
 
-            item.style.setProperty('--rotate-x', `${rotateX}deg`);
-            item.style.setProperty('--rotate-y', `${rotateY}deg`);
-            item.style.setProperty('--t-x', `${tX}px`);
-            item.style.setProperty('--t-y', `${tY}px`);
-          });
-          ticking = false;
+          const rect = item.getBoundingClientRect();
+          const x = event.clientX - rect.left;
+          const y = event.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const tX = ((x - centerX) / centerX) * 8;
+          const tY = ((y - centerY) / centerY) * 8;
+          const rotateX = ((y - centerY) / centerY) * 10;
+          const rotateY = ((centerX - x) / centerX) * 10;
+
+          item.style.setProperty('--mouse-x', `${x}px`);
+          item.style.setProperty('--mouse-y', `${y}px`);
+          item.style.setProperty('--rotate-x', `${rotateX}deg`);
+          item.style.setProperty('--rotate-y', `${rotateY}deg`);
+          item.style.setProperty('--t-x', `${tX}px`);
+          item.style.setProperty('--t-y', `${tY}px`);
         });
-        ticking = true;
-      }
+
+        tickingRef.current = false;
+      });
     };
 
     const handleMouseLeave = () => {
-      // Reset Tooltip
-      setCursorData(prev => ({ ...prev, visible: false }));
-      setIsHovering(false);
+      hideTooltip();
+      setHovering(false);
 
-      // Reset Bento Transforms
       bentoItemsRef.current.forEach((item) => {
         if (!item) return;
         item.style.setProperty('--rotate-x', '0deg');
@@ -95,62 +116,28 @@ const Home = ({ codingLanguages, projects, certificates, workExp }) => {
       });
     };
 
-    const handleMouseEnter = () => {
-      setIsHovering(true);
-    };
-
-    const handleClick = (e) => {
-      bentoItemsRef.current.forEach((item) => {
-        if (item && item.contains(e.target)) {
-          const rect = item.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-
-          const ripple = document.createElement('div');
-          ripple.className = 'click-ripple';
-          ripple.style.left = x + 'px';
-          ripple.style.top = y + 'px';
-          item.appendChild(ripple);
-
-          setTimeout(() => ripple.remove(), 600);
-        }
-      });
-    };
-
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseleave', handleMouseLeave);
-    document.addEventListener('mouseenter', handleMouseEnter, true);
-    document.addEventListener('click', handleClick);
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseleave', handleMouseLeave);
-      document.removeEventListener('mouseenter', handleMouseEnter, true);
-      document.removeEventListener('click', handleClick);
     };
   }, []);
 
   return (
     <div className="page home-page">
-      <FloatingBlobBackground />
-      {/* Custom Cursor Tooltip Layer */}
-      <div 
-        className={`bento-cursor-tooltip ${cursorData.visible ? 'active' : ''}`}
-        style={{ 
-          left: `${cursorData.x}px`, 
-          top: `${cursorData.y}px` 
-        }}
-      >
-        {cursorData.label}
-      </div>
+      <div
+        ref={tooltipRef}
+        className="bento-cursor-tooltip"
+      />
 
       <div className="bento-grid">
-        {/* Profile Section - Top Left */}
-        <Link to="/about" className="bento-item bento-profile" ref={(el) => (bentoItemsRef.current[0] = el)}>
+        <Link to="/about" className="bento-item bento-profile" ref={(element) => (bentoItemsRef.current[0] = element)}>
           <div className="bento-spotlight"></div>
           <div className="bento-stars"></div>
           <img src="/images/manabat_picture.jpg" alt="Alexander Manabat" className="profile-image profile-placeholder" />
-          
+
           <div className="profile-text-content">
             <p className="profile-subtitle">WEBSITE DEVELOPER &<br />UI / UX DESIGNER</p>
             <h1 className="profile-name">Alexander<br />Manabat</h1>
@@ -159,22 +146,21 @@ const Home = ({ codingLanguages, projects, certificates, workExp }) => {
           <img src="/images/external-link.png" alt="external link" className="external-link-icon" />
         </Link>
 
-        {/* Projects & Certifications Container - Top Right */}
         <Link
           to="/experiences"
           className="bento-item bento-top-right-container"
-          ref={(el) => (bentoItemsRef.current[1] = el)}
+          ref={(element) => (bentoItemsRef.current[1] = element)}
         >
           <div className="bento-spotlight"></div>
           <div className="bento-stars"></div>
-          
+
           <div className="bento-projects-inner">
             <div className="section-header">PROJECTS</div>
             <div className="projects-card-carousel">
-              {projects && projects.length > 0 && (
+              {currentProject && (
                 <div className="project-card-display">
-                  <img src={projects[currentProjectIndex].img} alt={projects[currentProjectIndex].name} className="project-card-image" />
-                  <p className="project-card-name">{projects[currentProjectIndex].name}</p>
+                  <img src={currentProject.img} alt={currentProject.name} className="project-card-image" />
+                  <p className="project-card-name">{currentProject.name}</p>
                 </div>
               )}
             </div>
@@ -183,18 +169,18 @@ const Home = ({ codingLanguages, projects, certificates, workExp }) => {
           <div className="bento-certifications-inner">
             <div className="section-header-right">CERTIFICATIONS</div>
             <div className="certs-list">
-              {certificates && certificates.length > 0 && (
+              {currentCertificate && (
                 <div className="cert-item">
                   <div className="cert-logo-wrapper">
-                    <img 
-                      src={certificates[currentCertIndex].image} 
-                      alt={certificates[currentCertIndex].title} 
-                      className="cert-logo" 
+                    <img
+                      src={currentCertificate.image}
+                      alt={currentCertificate.title}
+                      className="cert-logo"
                     />
                   </div>
                   <div className="cert-info">
-                    <p className="cert-title">{certificates[currentCertIndex].title.replace(' CERTIFICATION', '').replace(' Certification', '').split(' ').slice(0, 4).join(' ')}</p>
-                    <p className="cert-date">{certificates[currentCertIndex].date}</p>
+                    <p className="cert-title">{currentCertificateTitle}</p>
+                    <p className="cert-date">{currentCertificate.date}</p>
                   </div>
                 </div>
               )}
@@ -203,11 +189,10 @@ const Home = ({ codingLanguages, projects, certificates, workExp }) => {
           <img src="/images/external-link.png" alt="external link" className="external-link-icon" />
         </Link>
 
-        {/* Read Blog - Middle Left Small */}
         <Link
           to="/blogs"
           className="bento-item bento-blog"
-          ref={(el) => (bentoItemsRef.current[2] = el)}
+          ref={(element) => (bentoItemsRef.current[2] = element)}
         >
           <div className="bento-spotlight"></div>
           <div className="bento-stars"></div>
@@ -218,38 +203,36 @@ const Home = ({ codingLanguages, projects, certificates, workExp }) => {
           <img src="/images/external-link.png" alt="external link" className="external-link-icon" />
         </Link>
 
-        {/* Coding Languages - Middle Center Large */}
         <div
           className="bento-item bento-skills"
-          ref={(el) => (bentoItemsRef.current[3] = el)}
+          ref={(element) => (bentoItemsRef.current[3] = element)}
         >
           <div className="bento-spotlight"></div>
           <div className="bento-stars"></div>
           <LogoLoop languages={codingLanguages} speed={30} gap={65} logoHeight={55} />
         </div>
 
-        {/* Work Experience - Middle Right */}
         <Link
           to="/experiences"
           className="bento-item bento-experience"
-          ref={(el) => (bentoItemsRef.current[4] = el)}
+          ref={(element) => (bentoItemsRef.current[4] = element)}
         >
           <div className="bento-spotlight"></div>
           <div className="bento-stars"></div>
           <div className="exp-content">
-            {workExp && workExp.length > 0 && (
+            {workExperience && (
               <div className="exp-item">
                 <div className="exp-logo-wrapper">
-                  <img 
-                    src={workExp[0].img} 
-                    alt={workExp[0].companyName} 
-                    className="exp-logo" 
+                  <img
+                    src={workExperience.img}
+                    alt={workExperience.companyName}
+                    className="exp-logo"
                   />
                 </div>
                 <div className="exp-info">
-                  <p className="exp-company">{workExp[0].companyName}</p>
-                  <p className="exp-role">{workExp[0].role}</p>
-                  <p className="exp-date">{workExp[0].date}</p>
+                  <p className="exp-company">{workExperience.companyName}</p>
+                  <p className="exp-role">{workExperience.role}</p>
+                  <p className="exp-date">{workExperience.date}</p>
                 </div>
               </div>
             )}
@@ -257,10 +240,9 @@ const Home = ({ codingLanguages, projects, certificates, workExp }) => {
           <img src="/images/external-link.png" alt="external link" className="external-link-icon" />
         </Link>
 
-        {/* Stats - Bottom Left */}
         <div
           className="bento-item bento-stats"
-          ref={(el) => (bentoItemsRef.current[5] = el)}
+          ref={(element) => (bentoItemsRef.current[5] = element)}
         >
           <div className="bento-spotlight"></div>
           <div className="bento-stars"></div>
@@ -280,11 +262,10 @@ const Home = ({ codingLanguages, projects, certificates, workExp }) => {
           </div>
         </div>
 
-        {/* Motto/CTA - Bottom Right */}
         <Link
           to="/contact"
           className="bento-item bento-motto"
-          ref={(el) => (bentoItemsRef.current[6] = el)}
+          ref={(element) => (bentoItemsRef.current[6] = element)}
         >
           <div className="bento-spotlight"></div>
           <div className="bento-stars"></div>

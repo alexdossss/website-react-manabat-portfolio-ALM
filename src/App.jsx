@@ -1,21 +1,20 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import Layout from './components/Layout';
-import Home from './pages/Home';
-import About from './pages/About';
-import Experiences from './pages/Experiences';
-import Blogs from './pages/Blogs';
-import BlogDetail from './pages/BlogDetail';
-import Contact from './pages/Contact';
-import Projects from './pages/Projects';
-import Resume from './pages/Resume';
 import './styles/theme.css';
 import './styles/header.css';
 import './styles/navbar.css';
 import './styles/layout.css';
 import './styles/pages.css';
 import './styles/card-swap.css';
+
+const Home = lazy(() => import('./pages/Home'));
+const About = lazy(() => import('./pages/About'));
+const Experiences = lazy(() => import('./pages/Experiences'));
+const Blogs = lazy(() => import('./pages/Blogs'));
+const BlogDetail = lazy(() => import('./pages/BlogDetail'));
+const Contact = lazy(() => import('./pages/Contact'));
 
 const skills = [
   {

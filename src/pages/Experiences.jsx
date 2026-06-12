@@ -1,23 +1,30 @@
-import React, { useMemo, useRef, useState, useCallback } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import CardSwap, { Card } from '../components/CardSwap';
 import Folder from '../components/Folder';
-import FloatingBlobBackground from '../components/FloatingBlobBackground';
 import '../styles/pages.css';
 
 const Experiences = ({ projects = [], workExp = [], certificates = [] }) => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [folderNavigation, setFolderNavigation] = useState(['root', 'work-exp']); // Default to work experience
-  const [isHovered, setIsHovered] = useState(false);
-  const infoSectionRef = useRef(null);
-  const cardSwapRef = useRef(null);
-  const folderContainerRef = useRef(null);
-  const projectsCount = projects.length;
-  const pauseOnHoverRefs = useMemo(() => [infoSectionRef], []);
-
-  // Determine current view based on folder navigation
-  const currentView = folderNavigation[folderNavigation.length - 1];
+  const [folderNavigation, setFolderNavigation] = useState(['root', 'work-exp']);
   const [currentExpIndex, setCurrentExpIndex] = useState(0);
   const [currentCertIndex, setCurrentCertIndex] = useState(0);
+  const infoSectionRef = useRef(null);
+  const cardSwapRef = useRef(null);
+  const projectsCount = projects.length;
+
+  const pauseOnHoverRefs = useMemo(() => [infoSectionRef], []);
+  const currentView = useMemo(() => folderNavigation[folderNavigation.length - 1], [folderNavigation]);
+  const currentProject = useMemo(() => (
+    projectsCount > 0 ? projects[Math.min(activeIndex, projectsCount - 1)] : null
+  ), [projects, activeIndex, projectsCount]);
+  const currentExperience = useMemo(() => (
+    workExp.length > 0 ? workExp[Math.min(currentExpIndex, workExp.length - 1)] : null
+  ), [workExp, currentExpIndex]);
+  const currentCertificate = useMemo(() => (
+    certificates.length > 0 ? certificates[Math.min(currentCertIndex, certificates.length - 1)] : null
+  ), [certificates, currentCertIndex]);
+  const certificateLogos = useMemo(() => [...new Set(certificates.map((certificate) => certificate.image))], [certificates]);
+  const workLogos = useMemo(() => workExp.map((experience) => experience.img), [workExp]);
 
   const handleNext = useCallback(() => {
     if (projectsCount < 2) return;
@@ -29,11 +36,32 @@ const Experiences = ({ projects = [], workExp = [], certificates = [] }) => {
     cardSwapRef.current?.animatePrevious();
   }, [projectsCount]);
 
-  const currentProject = projects[activeIndex];
+  const showWorkFolder = useCallback(() => {
+    setFolderNavigation(['root', 'work-exp']);
+  }, []);
+
+  const showCertificatesFolder = useCallback(() => {
+    setFolderNavigation(['root', 'certificates']);
+  }, []);
+
+  const showPreviousExperience = useCallback(() => {
+    setCurrentExpIndex((currentIndex) => Math.max(0, currentIndex - 1));
+  }, []);
+
+  const showNextExperience = useCallback(() => {
+    setCurrentExpIndex((currentIndex) => Math.min(workExp.length - 1, currentIndex + 1));
+  }, [workExp.length]);
+
+  const showPreviousCertificate = useCallback(() => {
+    setCurrentCertIndex((currentIndex) => Math.max(0, currentIndex - 1));
+  }, []);
+
+  const showNextCertificate = useCallback(() => {
+    setCurrentCertIndex((currentIndex) => Math.min(certificates.length - 1, currentIndex + 1));
+  }, [certificates.length]);
 
   return (
     <div className="page experiences-page">
-      <FloatingBlobBackground />
       <section className="experiences-header">
         <div className="header-h1-h2-layered">
           <h1>DEVELOPMENT</h1>
@@ -47,12 +75,12 @@ const Experiences = ({ projects = [], workExp = [], certificates = [] }) => {
             {currentProject && (
               <div className="experience-item">
                 <h3 className="project-name">{currentProject.name}</h3>
-                
+
                 <div className="tech-stack">
                   <p className="stack-label">Tech Stack</p>
                   <div className="stack-tags">
-                    {currentProject.stack.map((tech, techIndex) => (
-                      <span key={techIndex} className="tech-badge">{tech}</span>
+                    {currentProject.stack.map((tech) => (
+                      <span key={tech} className="tech-badge">{tech}</span>
                     ))}
                   </div>
                 </div>
@@ -71,7 +99,7 @@ const Experiences = ({ projects = [], workExp = [], certificates = [] }) => {
           </div>
 
           <div className="experiences-nav-controls">
-            <button 
+            <button
               className="experiences-nav-btn"
               onClick={handlePrevious}
               aria-label="Previous project"
@@ -79,16 +107,16 @@ const Experiences = ({ projects = [], workExp = [], certificates = [] }) => {
               Previous
             </button>
             <div className="experiences-indicators">
-              {projects.map((_, index) => (
+              {projects.map((project, index) => (
                 <button
-                  key={index}
+                  key={project.name}
                   className={`experiences-indicator ${index === activeIndex ? 'active' : ''}`}
                   onClick={() => setActiveIndex(index)}
                   aria-label={`Go to project ${index + 1}`}
                 />
               ))}
             </div>
-            <button 
+            <button
               className="experiences-nav-btn"
               onClick={handleNext}
               aria-label="Next project"
@@ -114,9 +142,11 @@ const Experiences = ({ projects = [], workExp = [], certificates = [] }) => {
             >
               {projects.map((project) => (
                 <Card key={project.name}>
-                  <img 
-                    src={project.img} 
+                  <img
+                    src={project.img}
                     alt={project.name}
+                    loading="lazy"
+                    decoding="async"
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
                 </Card>
@@ -126,97 +156,92 @@ const Experiences = ({ projects = [], workExp = [], certificates = [] }) => {
         </div>
       </div>
 
-      {/* FOLDER SECTION - EXPERIENCE AND CERTIFICATES */}
-      <div 
-        className="folder-section"
-        ref={folderContainerRef}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
+      <div className="folder-section">
         <div className="folder-layout">
-          {/* Left Side - Folder Navigation */}
           <div className="folders-column">
             <div className="folders-container">
-              {/* Work Folder */}
-              <div 
+              <div
                 className={`folder-item ${currentView === 'work-exp' ? 'selected' : ''}`}
-                onClick={() => setFolderNavigation(['root', 'work-exp'])}
+                onClick={showWorkFolder}
               >
-                <Folder 
+                <Folder
                   color="#2e77e5"
                   size={1.2}
                   isSelected={currentView === 'work-exp'}
                   open={currentView === 'work-exp'}
-                  items={workExp.map(exp => exp.img)} // Pass logo image paths
-                  isImage={true} // New prop to tell Folder to render images
+                  items={workLogos}
+                  isImage={true}
                 />
                 <p className="folder-label">Work</p>
               </div>
 
-              {/* Certificates Folder */}
-              <div 
+              <div
                 className={`folder-item ${currentView === 'certificates' ? 'selected' : ''}`}
-                onClick={() => setFolderNavigation(['root', 'certificates'])}
+                onClick={showCertificatesFolder}
               >
-                <Folder 
+                <Folder
                   color="#2e77e5"
                   size={1.2}
                   isSelected={currentView === 'certificates'}
                   open={currentView === 'certificates'}
-                  items={[...new Set(certificates.map(cert => cert.image))]}
-                  
-                  isImage={true} // New prop to tell Folder to render images
+                  items={certificateLogos}
+                  isImage={true}
                 />
                 <p className="folder-label">Certs</p>
               </div>
             </div>
           </div>
 
-          {/* Right Side - Content Display */}
           <div className="folder-content-column">
-            {currentView === 'work-exp' && workExp.length > 0 && (
+            {currentView === 'work-exp' && currentExperience && (
               <div className="folder-content experience-content">
                 <h3>Work Experience</h3>
                 <div className="carousel-container">
                   <div className="carousel-content">
                     <div className="carousel-item active">
                       <div className="exp-header">
-                        {workExp[currentExpIndex].img && (
-                          <img src={workExp[currentExpIndex].img} alt={workExp[currentExpIndex].companyName} className="exp-logo" />
+                        {currentExperience.img && (
+                          <img
+                            src={currentExperience.img}
+                            alt={currentExperience.companyName}
+                            className="exp-logo"
+                            loading="lazy"
+                            decoding="async"
+                          />
                         )}
                         <div className="exp-title-group">
-                          <h4 className="exp-company">{workExp[currentExpIndex].companyName}</h4>
-                          <p className="exp-role">{workExp[currentExpIndex].role}</p>
+                          <h4 className="exp-company">{currentExperience.companyName}</h4>
+                          <p className="exp-role">{currentExperience.role}</p>
                         </div>
                       </div>
                       <div className="exp-details">
-                        <p><span className="detail-label">Type:</span> {workExp[currentExpIndex].type}</p>
-                        <p><span className="detail-label">Date:</span> {workExp[currentExpIndex].date}</p>
+                        <p><span className="detail-label">Type:</span> {currentExperience.type}</p>
+                        <p><span className="detail-label">Date:</span> {currentExperience.date}</p>
                       </div>
-                      <p className="exp-description">{workExp[currentExpIndex].description}</p>
+                      <p className="exp-description">{currentExperience.description}</p>
                     </div>
                   </div>
 
                   {workExp.length > 1 && (
                     <div className="carousel-nav">
-                      <button 
-                        onClick={() => setCurrentExpIndex(Math.max(0, currentExpIndex - 1))}
+                      <button
+                        onClick={showPreviousExperience}
                         disabled={currentExpIndex === 0}
                         className="carousel-nav-btn prev-btn"
                       >
                         Previous
                       </button>
                       <div className="carousel-indicators">
-                        {workExp.map((_, index) => (
+                        {workExp.map((experience, index) => (
                           <button
-                            key={index}
+                            key={experience.companyName}
                             className={`carousel-indicator ${index === currentExpIndex ? 'active' : ''}`}
                             onClick={() => setCurrentExpIndex(index)}
                           />
                         ))}
                       </div>
-                      <button 
-                        onClick={() => setCurrentExpIndex(Math.min(workExp.length - 1, currentExpIndex + 1))}
+                      <button
+                        onClick={showNextExperience}
                         disabled={currentExpIndex === workExp.length - 1}
                         className="carousel-nav-btn next-btn"
                       >
@@ -228,50 +253,52 @@ const Experiences = ({ projects = [], workExp = [], certificates = [] }) => {
               </div>
             )}
 
-            {currentView === 'certificates' && certificates.length > 0 && (
+            {currentView === 'certificates' && currentCertificate && (
               <div className="folder-content certificates-content">
                 <h3>Certificates</h3>
                 <div className="carousel-container">
                   <div className="carousel-content">
                     <div className="carousel-item active">
                       <div className="cert-header">
-                        <img 
-                          src={certificates[currentCertIndex].image} 
-                          alt={certificates[currentCertIndex].title}
-                          className="cert-logo" 
+                        <img
+                          src={currentCertificate.image}
+                          alt={currentCertificate.title}
+                          className="cert-logo"
+                          loading="lazy"
+                          decoding="async"
                         />
                         <div className="cert-title-group">
-                          <h4 className="cert-title">{certificates[currentCertIndex].title}</h4>
-                          <p className="cert-date">{certificates[currentCertIndex].date}</p>
+                          <h4 className="cert-title">{currentCertificate.title}</h4>
+                          <p className="cert-date">{currentCertificate.date}</p>
                         </div>
                       </div>
-                      <p className="cert-description">{certificates[currentCertIndex].description}</p>
-                      <a href={certificates[currentCertIndex].url} target="_blank" rel="noopener noreferrer" className="cert-link">
-                        View Certificate →
+                      <p className="cert-description">{currentCertificate.description}</p>
+                      <a href={currentCertificate.url} target="_blank" rel="noopener noreferrer" className="cert-link">
+                        View Certificate -&gt;
                       </a>
                     </div>
                   </div>
 
                   {certificates.length > 1 && (
                     <div className="carousel-nav">
-                      <button 
-                        onClick={() => setCurrentCertIndex(Math.max(0, currentCertIndex - 1))}
+                      <button
+                        onClick={showPreviousCertificate}
                         disabled={currentCertIndex === 0}
                         className="carousel-nav-btn prev-btn"
                       >
                         Previous
                       </button>
                       <div className="carousel-indicators">
-                        {certificates.map((_, index) => (
+                        {certificates.map((certificate, index) => (
                           <button
-                            key={index}
+                            key={certificate.title}
                             className={`carousel-indicator ${index === currentCertIndex ? 'active' : ''}`}
                             onClick={() => setCurrentCertIndex(index)}
                           />
                         ))}
                       </div>
-                      <button 
-                        onClick={() => setCurrentCertIndex(Math.min(certificates.length - 1, currentCertIndex + 1))}
+                      <button
+                        onClick={showNextCertificate}
                         disabled={currentCertIndex === certificates.length - 1}
                         className="carousel-nav-btn next-btn"
                       >
@@ -283,8 +310,7 @@ const Experiences = ({ projects = [], workExp = [], certificates = [] }) => {
               </div>
             )}
 
-            {/* Empty State Handlers */}
-            {((currentView === 'work-exp' && workExp.length === 0) || 
+            {((currentView === 'work-exp' && workExp.length === 0) ||
               (currentView === 'certificates' && certificates.length === 0)) && (
               <div className="folder-content">
                 <p className="no-data">No data available for this section.</p>

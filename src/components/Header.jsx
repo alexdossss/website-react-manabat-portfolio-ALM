@@ -33,20 +33,22 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
-    setMenuOpen(false);
+    const frameId = requestAnimationFrame(() => setMenuOpen(false));
+    return () => cancelAnimationFrame(frameId);
   }, [location.pathname]);
 
   useEffect(() => {
-    if (!isCompactNav) {
-      setMenuOpen(false);
-    }
+    if (isCompactNav) return;
+
+    const frameId = requestAnimationFrame(() => setMenuOpen(false));
+    return () => cancelAnimationFrame(frameId);
   }, [isCompactNav]);
 
   useEffect(() => {
     if (!isCompactNav) return;
 
-    const onKeyDown = (e) => {
-      if (e.key === 'Escape') setMenuOpen(false);
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') setMenuOpen(false);
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);

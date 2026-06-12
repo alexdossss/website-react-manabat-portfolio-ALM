@@ -1,58 +1,65 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import '../styles/logo-loop.css';
 
-const LogoLoop = ({ languages, direction = 'right', speed = 30, gap = 65, logoHeight = 55 }) => {
+const LogoLoop = ({ languages = [], direction = 'right', speed = 30, gap = 65, logoHeight = 55 }) => {
   const scrollRef = useRef(null);
-  const [isHovered, setIsHovered] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
+  const isHoveredRef = useRef(false);
+  const isDraggingRef = useRef(false);
+  const dragStartRef = useRef({ startX: 0, scrollLeft: 0 });
 
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-    if (scrollRef.current) {
-      scrollRef.current.style.animationPlayState = 'paused';
-    }
-  };
+  const loopLanguages = useMemo(() => [...languages, ...languages], [languages]);
+  const animationDuration = useMemo(() => `${(100 - speed) / 2}s`, [speed]);
+  const scrollStyle = useMemo(() => ({
+    '--animation-duration': animationDuration,
+    '--gap': `${gap}px`,
+    '--logo-height': `${logoHeight}px`,
+    '--scroll-direction': direction === 'left' ? 'reverse' : 'normal',
+  }), [animationDuration, direction, gap, logoHeight]);
 
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-    setIsDragging(false);
-    if (scrollRef.current) {
-      scrollRef.current.style.animationPlayState = 'running';
-      scrollRef.current.style.cursor = 'grab';
-    }
-  };
+  const handleMouseEnter = useCallback(() => {
+    isHoveredRef.current = true;
+    if (!scrollRef.current) return;
+    scrollRef.current.style.animationPlayState = 'paused';
+  }, []);
 
-  const handleMouseDown = (e) => {
-    if (!isHovered) return;
-    setIsDragging(true);
-    setStartX(e.pageX - scrollRef.current.offsetLeft);
-    setScrollLeft(scrollRef.current.scrollLeft);
-    scrollRef.current.style.cursor = 'grabbing';
-  };
+  const handleMouseLeave = useCallback(() => {
+    isHoveredRef.current = false;
+    isDraggingRef.current = false;
+    if (!scrollRef.current) return;
+    scrollRef.current.style.animationPlayState = 'running';
+    scrollRef.current.style.cursor = 'grab';
+  }, []);
 
-  const handleMouseUp = () => {
-    setIsDragging(false);
-    if (scrollRef.current) {
-      scrollRef.current.style.cursor = 'grab';
-    }
-  };
+  const handleMouseDown = useCallback((event) => {
+    const scrollElement = scrollRef.current;
+    if (!isHoveredRef.current || !scrollElement) return;
 
-  const handleMouseMove = (e) => {
-    if (!isDragging) return;
-    e.preventDefault();
-    const x = e.pageX - scrollRef.current.offsetLeft;
-    const walk = (x - startX) * 2;
-    scrollRef.current.scrollLeft = scrollLeft - walk;
-  };
+    isDraggingRef.current = true;
+    dragStartRef.current = {
+      startX: event.pageX - scrollElement.offsetLeft,
+      scrollLeft: scrollElement.scrollLeft,
+    };
+    scrollElement.style.cursor = 'grabbing';
+  }, []);
 
-  const getAnimationDuration = (speed) => {
-    return `${(100 - speed) / 2}s`;
-  };
+  const handleMouseUp = useCallback(() => {
+    isDraggingRef.current = false;
+    if (!scrollRef.current) return;
+    scrollRef.current.style.cursor = 'grab';
+  }, []);
+
+  const handleMouseMove = useCallback((event) => {
+    const scrollElement = scrollRef.current;
+    if (!isDraggingRef.current || !scrollElement) return;
+
+    event.preventDefault();
+    const x = event.pageX - scrollElement.offsetLeft;
+    const walk = (x - dragStartRef.current.startX) * 2;
+    scrollElement.scrollLeft = dragStartRef.current.scrollLeft - walk;
+  }, []);
 
   return (
-    <div 
+    <div
       className="logo-loop-container"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -63,24 +70,12 @@ const LogoLoop = ({ languages, direction = 'right', speed = 30, gap = 65, logoHe
       <div
         ref={scrollRef}
         className="logo-loop-scroll"
-        style={{
-          '--animation-duration': getAnimationDuration(speed),
-          '--gap': `${gap}px`,
-          '--logo-height': `${logoHeight}px`,
-        }}
+        style={scrollStyle}
       >
         <div className="logo-loop-content">
-          {/* Original set */}
-          {languages.map((lang, idx) => (
-            <div key={idx} className="logo-item">
-              <img src={lang.img} alt={lang.name} />
-              <p>{lang.name}</p>
-            </div>
-          ))}
-          {/* Duplicate for infinite scroll */}
-          {languages.map((lang, idx) => (
-            <div key={`duplicate-${idx}`} className="logo-item">
-              <img src={lang.img} alt={lang.name} />
+          {loopLanguages.map((lang, index) => (
+            <div key={`${lang.name}-${index}`} className="logo-item">
+              <img src={lang.img} alt={lang.name} loading="lazy" decoding="async" />
               <p>{lang.name}</p>
             </div>
           ))}

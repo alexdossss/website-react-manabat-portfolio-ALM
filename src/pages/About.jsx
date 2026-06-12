@@ -1,52 +1,65 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useCallback, useMemo } from 'react';
 import LogoLoop from '../components/LogoLoop';
 import Lanyard from '../components/Lanyard';
-import FloatingBlobBackground from '../components/FloatingBlobBackground';
 import "../styles/pages.css"
 
 const About = ({ codingLanguages, skills }) => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const tickingRef = useRef(false);
+  const schoolCardRefs = useRef([]);
+
+  const skillsList = useMemo(() => skills ?? [], [skills]);
+
+  const skillCards = useMemo(() => (
+    skillsList.map((skill, index) => (
+      <div key={skill.title} className='skill-card-item'>
+        <div className='skill-card-header'>
+          <div className='skill-number'>{String(index + 1).padStart(2, '0')}</div>
+          <div className='skill-icon-wrapper'>
+            <img src={skill.img} alt={skill.title} className='skill-icon' />
+          </div>
+          <h3 className='skill-title'>{skill.title}</h3>
+        </div>
+        <p className='skill-description'>{skill.description}</p>
+      </div>
+    ))
+  ), [skillsList]);
+
+  const handleMouseMove = useCallback((event) => {
+    if (tickingRef.current) return;
+
+    tickingRef.current = true;
+
+    window.requestAnimationFrame(() => {
+      schoolCardRefs.current.forEach((card) => {
+        if (!card) return;
+
+        const rect = card.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        const xPercent = (x / rect.width) * 100;
+        const yPercent = (y / rect.height) * 100;
+
+        card.style.setProperty('--mouse-x', `${xPercent}%`);
+        card.style.setProperty('--mouse-y', `${yPercent}%`);
+      });
+
+      tickingRef.current = false;
+    });
+  }, []);
 
   useEffect(() => {
-    let ticking = false;
-    const handleMouseMove = (e) => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const cards = document.querySelectorAll('.sanlorenzo, .holyangeluni');
-          
-          cards.forEach(card => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            // Calculate percentage position for the gradient
-            const xPercent = (x / rect.width) * 100;
-            const yPercent = (y / rect.height) * 100;
-            
-            card.style.setProperty('--mouse-x', `${xPercent}%`);
-            card.style.setProperty('--mouse-y', `${yPercent}%`);
-          });
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  }, [handleMouseMove]);
+
   return (
     <div className="page about-page">
-        <FloatingBlobBackground />
-        {/* RESTRUCTURED SECTION */}
         <div className='about-me-content'>
             <div className="about-me-main-flex">
-                {/* Fixed area for the Lanyard on the Left */}
                 <div className='lanyard-column'>
                     <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} />
                 </div>
 
-                {/* Content area on the Right */}
                 <div className='about-me-inner-contents'>
                     <h1>Why should you hire me?</h1>
                     <p>
@@ -99,18 +112,7 @@ const About = ({ codingLanguages, skills }) => {
             </section>
 
             <div className='skills-grid'>
-                {skills && skills.map((skill, index) => (
-                <div key={index} className='skill-card-item'>
-                    <div className='skill-card-header'>
-                    <div className='skill-number'>{String(index + 1).padStart(2, '0')}</div>
-                    <div className='skill-icon-wrapper'>
-                        <img src={skill.img} alt={skill.title} className='skill-icon' />
-                    </div>
-                    <h3 className='skill-title'>{skill.title}</h3>
-                    </div>
-                    <p className='skill-description'>{skill.description}</p>
-                </div>
-                ))}
+                {skillCards}
             </div>
         </div>
 
@@ -123,7 +125,12 @@ const About = ({ codingLanguages, skills }) => {
                 <p>My academic journey from Senior High School to pursuing a Bachelor of Science in Information Technology built a strong foundation in problem-solving, critical thinking, and system design. Through hands-on projects and collaborative activities, I developed adaptability, creativity, and a commitment to continuous learning in the ever-evolving field of technology.</p>
             </section>
             <section className='main-education-info'>
-                <div className='sanlorenzo'>
+                <div
+                    className='sanlorenzo'
+                    ref={(element) => {
+                      schoolCardRefs.current[0] = element;
+                    }}
+                >
                     <section>
                         <img src="/images/schools/sanlo_logo_education.png" alt="San Lorenzo Ruiz" />
                     </section>
@@ -143,7 +150,12 @@ const About = ({ codingLanguages, skills }) => {
                     </section>
                 </div>
 
-                <div className='holyangeluni'>
+                <div
+                    className='holyangeluni'
+                    ref={(element) => {
+                      schoolCardRefs.current[1] = element;
+                    }}
+                >
                     <section>
                         <img src="/images/schools/hau_logo_education.png" alt="Holy Angel University Logo" />
                     </section>

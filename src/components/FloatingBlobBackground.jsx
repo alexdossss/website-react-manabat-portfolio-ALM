@@ -1,5 +1,5 @@
 import '../styles/floating-blob-background.css';
-import React from 'react';
+import React, { useMemo } from 'react';
 
 const BLOBS_DATA = [
   { id: 1, colors: ['#00C6FF', '#0072FF'], duration: '9s', delay: '0s' },
@@ -9,16 +9,23 @@ const BLOBS_DATA = [
 ];
 
 function FloatingBlobBackground() {
+  const blobs = useMemo(() => (
+    BLOBS_DATA.map((blob) => ({
+      ...blob,
+      style: {
+        background: `radial-gradient(circle at 30% 40%, ${blob.colors[0]}, ${blob.colors[1]})`,
+        animation: `float-blob-${blob.id} ${blob.duration} ${blob.delay} infinite ease-in-out`,
+      },
+    }))
+  ), []);
+
   return (
     <div className="floating-blobs-container">
-      {BLOBS_DATA.map((blob) => (
+      {blobs.map((blob) => (
         <div
           key={blob.id}
           className={`blob blob-${blob.id}`}
-          style={{
-            background: `radial-gradient(circle at 30% 40%, ${blob.colors[0]}, ${blob.colors[1]})`,
-            animation: `float-blob-${blob.id} ${blob.duration} ${blob.delay} infinite ease-in-out`,
-          }}
+          style={blob.style}
         />
       ))}
     </div>

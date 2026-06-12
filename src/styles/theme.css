@@ -90,18 +90,25 @@ input:focus, textarea:focus, select:focus {
 
 /* Scrollbar styling */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--accent-color);
-  border-radius: 4px;
+  background: linear-gradient(180deg, var(--accent-light), var(--accent-color));
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  border-radius: 10px;
+  transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-light);
+  background: var(--accent-color);
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
+
