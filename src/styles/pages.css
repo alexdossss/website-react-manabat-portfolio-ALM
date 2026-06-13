@@ -883,6 +883,7 @@ background: rgba(116, 116, 116, 0.04);
     width: 80em;
     height: 40em;
     margin: 0 auto 80px auto;
+    /* margin-bottom: 0; */
     gap: 40px;
 }
 
@@ -1035,7 +1036,6 @@ background: rgba(116, 116, 116, 0.04);
 }
 
 .skill-card-item:hover {
-  border-color: rgba(99, 179, 237, 0.4);
   cursor: pointer;
   
   /* 3. Make the whole card grow */
@@ -1068,7 +1068,7 @@ background: rgba(116, 116, 116, 0.04);
 /* Change color when the card is hovered */
 .skill-card-item:hover .skill-title,
 .skill-card-item:hover .skill-number {
-  color: #63b3ed;
+  color: #005bea;
 }
 
 .skill-icon-wrapper {
@@ -1472,6 +1472,12 @@ background: rgba(116, 116, 116, 0.04);
   order: 2;
 }
 
+/* REPO */
+
+.github-repo{
+  margin-bottom: 3em;
+}
+
 /* ============ EXPERIENCES INFO ============ */
 .experiences-info {
   width: 100%;
@@ -1558,6 +1564,7 @@ background: rgba(116, 116, 116, 0.04);
   color: #aaa;
   line-height: 1.6;
   margin: 0;
+  height: 80px;
 }
 
 .project-actions {
@@ -2037,6 +2044,10 @@ background: rgba(116, 116, 116, 0.04);
     width: 80em;
 }
 
+.contact-description{
+  margin-bottom: 3em;
+}
+
 .contact-page .header-h1-h2-layered {
     position: relative;
     flex: 0 0 100%; 
@@ -2103,63 +2114,10 @@ background: rgba(116, 116, 116, 0.04);
   background: rgba(116, 116, 116, 0.02);
   backdrop-filter: blur(10px);
   position: relative;
-  transform-style: preserve-3d;
   width: 100%;
-  --mouse-x: 0px;
-  --mouse-y: 0px;
-  --rotate-x: 0deg;
-  --rotate-y: 0deg;
-  --t-x: 0px;
-  --t-y: 0px;
-  will-change: transform;
-  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.4s ease;
-}
-
-.contact-form-card::before {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  border-radius: 16px;
-  padding: 1.5px;
-  background: radial-gradient(
-    circle 230px at var(--mouse-x) var(--mouse-y), 
-    rgba(0, 102, 255, 0.5), 
-    transparent 80%
-  );
-  -webkit-mask: 
-      linear-gradient(#fff 0 0) content-box, 
-      linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  z-index: 2;
-}
-
-.contact-form-card:hover::before {
-  opacity: 1;
-}
-
-.contact-form-card:hover {
-  transform: translate3d(var(--t-x), var(--t-y), 0) 
-             rotateX(var(--rotate-x)) 
-             rotateY(var(--rotate-y)) 
-             scale3d(1.02, 1.02, 1);
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
-  border-color: rgba(99, 179, 237, 0.6);
-  cursor: pointer;
-  z-index: 10;
-}
-
-.contact-form-card:hover .bento-spotlight {
-  opacity: 1;
-}
-
-.contact-form-card:hover .bento-stars {
-  opacity: 1;
-  visibility: visible;
-  animation: twinkle 3s ease-in-out infinite;
+  box-sizing: border-box;
+  overflow: hidden;
+  transition: border-color 0.4s ease;
 }
 
 .contact-form {
@@ -2174,6 +2132,9 @@ background: rgba(116, 116, 116, 0.04);
 .contact-form input,
 .contact-form textarea {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   padding: 12px 16px;
   background: rgba(0, 0, 0, 0.3) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
@@ -2182,6 +2143,12 @@ background: rgba(116, 116, 116, 0.04);
   font-size: 14px;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
   font-family: inherit;
+}
+
+.contact-form textarea {
+  resize: vertical;
+  max-height: 220px;
+  min-height: 100px;
 }
 
 .contact-form input:focus,
@@ -2240,12 +2207,12 @@ background: rgba(116, 116, 116, 0.04);
 }
 
 .contact-info-card:hover {
-  transform: translate3d(var(--t-x), var(--t-y), 0) 
-             rotateX(var(--rotate-x)) 
-             rotateY(var(--rotate-y)) 
-             scale3d(1.03, 1.03, 1);
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
-  border-color: rgba(99, 179, 237, 0.6);
+  transform: translate3d(var(--t-x), var(--t-y), 0)
+             rotateX(var(--rotate-x))
+             rotateY(var(--rotate-y))
+             scale3d(1.02, 1.02, 1);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+  border-color: rgba(99, 179, 237, 0.4);
   cursor: pointer;
   z-index: 10;
 }
@@ -2735,6 +2702,7 @@ background: rgba(116, 116, 116, 0.04);
     padding: 0 20px;
     gap: 32px;
     overflow-x: hidden;
+    padding-top: 3em;
   }
 
   .page.experiences-page .experiences-card-container {
@@ -2775,6 +2743,10 @@ background: rgba(116, 116, 116, 0.04);
     max-width: 900px;
     height: auto;
     margin: 0 auto;
+    margin-bottom: 1em;
+    background-color: black;
+    position: relative;
+    z-index: 9999;
   }
 
   .page.experiences-page .experiences-nav-controls {

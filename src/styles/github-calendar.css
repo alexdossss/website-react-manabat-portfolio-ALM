@@ -1,0 +1,189 @@
+.github-repo {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto 3em auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.gh-contrib-section-wrapper {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  align-items: flex-start;
+  box-sizing: border-box;
+}
+
+.gh-calendar-card {
+  flex: 1;
+  background: rgba(13, 17, 23, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 24px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.gh-years-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 80px;
+}
+
+.gh-year-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.gh-year-btn:hover {
+  color: #fff;
+}
+
+.gh-year-btn.active {
+  background: #005bea;
+  color: #fff;
+  font-weight: 600;
+}
+
+.gh-calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.gh-header-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.gh-header-settings {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.gh-header-settings:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.gh-calendar-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 16px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+.gh-calendar-wrapper::-webkit-scrollbar {
+  height: 4px;
+}
+
+.gh-calendar-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+.gh-calendar-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.gh-footer-link {
+  color: rgba(255, 255, 255, 0.4);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.gh-footer-link:hover {
+  color: #005bea;
+}
+
+.gh-legend {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.gh-legend-cells {
+  display: flex;
+  gap: 3px;
+}
+
+.gh-legend-cell {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.gh-legend-cell.level-0 { background-color: #161b22; }
+.gh-legend-cell.level-1 { background-color: #0e4429; }
+.gh-legend-cell.level-2 { background-color: #006d32; }
+.gh-legend-cell.level-3 { background-color: #26a641; }
+.gh-legend-cell.level-4 { background-color: #39d353; }
+
+.gh-calendar-skeleton {
+  display: flex;
+  gap: 4px;
+  overflow: hidden;
+  height: 112px;
+}
+
+.gh-skeleton-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.gh-skeleton-cell {
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.05);
+  animation: skeleton-pulse 1.8s ease-in-out infinite;
+}
+
+.gh-skeleton-col:nth-child(odd) .gh-skeleton-cell {
+  animation-delay: 0.15s;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 0.08; }
+}
+
+@media screen and (max-width: 768px) {
+  .gh-contrib-section-wrapper {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .gh-years-list {
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+  }
+  .gh-year-btn {
+    flex: 1;
+    max-width: 100px;
+  }
+}

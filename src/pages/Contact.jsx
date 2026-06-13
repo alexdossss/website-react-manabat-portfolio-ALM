@@ -13,7 +13,6 @@ const Contact = () => {
   const [state, handleSubmit] = useForm("xaqdpell");
   const [formData, setFormData] = useState(emptyFormData);
 
-  const formRef = useRef(null);
   const emailCardRef = useRef(null);
   const socialCardRef = useRef(null);
   const statusCardRef = useRef(null);
@@ -103,24 +102,17 @@ const Contact = () => {
             <h2>Contact</h2>
           </div>
           <p className="contact-description">
-            If you’re interested in collaborating or have any questions, feel free to reach out. 
+            If you're interested in collaborating or have any questions, feel free to reach out. 
             You can email me directly at the provided address or use the contact form below 
-            to send a message. I’ll get back to you as soon as possible and look forward to connecting!
+            to send a message. I'll get back to you as soon as possible and look forward to connecting!
           </p>
         </div>
 
         <div className="contact-form-and-info">
           <div className="form-info">
-            <div 
-              ref={formRef}
-              className="contact-form-card"
-              onMouseMove={(event) => handleMouseMove(event, formRef)}
-              onMouseLeave={() => handleMouseLeave(formRef)}
-            >
-              <div className="bento-spotlight"></div>
-              <div className="bento-stars"></div>
-              <form 
-                className="contact-form" 
+            <div className="contact-form-card">
+              <form
+                className="contact-form"
                 onSubmit={onSubmit}
                 style={state.succeeded ? { border: 'none', padding: '0' } : {}}
               >
@@ -154,7 +146,7 @@ const Contact = () => {
           </div>
 
           <div className="contact-info">
-            <div 
+            <div
               ref={emailCardRef}
               className="contact-info-card email-card"
               onMouseMove={(event) => handleMouseMove(event, emailCardRef)}
@@ -174,7 +166,7 @@ const Contact = () => {
               </div>
             </div>
 
-            <div 
+            <div
               ref={socialCardRef}
               className="contact-info-card socials-card"
               onMouseMove={(event) => handleMouseMove(event, socialCardRef)}
@@ -194,7 +186,7 @@ const Contact = () => {
               </div>
             </div>
 
-            <div 
+            <div
               ref={statusCardRef}
               className="contact-info-card status-card"
               onMouseMove={(event) => handleMouseMove(event, statusCardRef)}

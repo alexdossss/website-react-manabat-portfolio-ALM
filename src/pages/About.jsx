@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useCallback, useMemo } from 'react';
 import LogoLoop from '../components/LogoLoop';
 import Lanyard from '../components/Lanyard';
+import GithubContributions from '../components/GithubContributions';
 import "../styles/pages.css"
 
 const About = ({ codingLanguages, skills }) => {
@@ -100,6 +101,10 @@ const About = ({ codingLanguages, skills }) => {
                 </div>
             </div>
         </div>
+{/* 
+        <div className="github-repo">
+            <GithubContributions />
+        </div> */}
 
         <LogoLoop languages={codingLanguages} speed={30} gap={65} logoHeight={55} />
 

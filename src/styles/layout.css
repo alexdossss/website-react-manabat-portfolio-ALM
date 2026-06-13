@@ -26,30 +26,60 @@
   }
 }
 
-
-
-.page-transition {
-  animation: fadeIn 0.5s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* Responsive */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 480px) {
   .main-content {
+    margin-top: 60px;
     margin-bottom: 0;
   }
 }
 
-@media screen and (max-width: 480px) {
-  .main-content {
-    margin-top: 60px;
+.page-transition {
+  animation: fadeIn 0.45s ease-out both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================================
+   SCROLL REVEAL — Professional, Hardware-Accelerated
+   ========================================================= */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal-element {
+    opacity: 0;
+    transform: translateY(32px) scale(0.97);
+    filter: blur(6px);
+    transition:
+      opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      filter 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform, filter;
+  }
+
+  .reveal-element.reveal-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+  }
+
+  .skill-card-item.reveal-element:nth-child(2) { transition-delay: 0.06s; }
+  .skill-card-item.reveal-element:nth-child(3) { transition-delay: 0.12s; }
+  .skill-card-item.reveal-element:nth-child(4) { transition-delay: 0.18s; }
+  .skill-card-item.reveal-element:nth-child(5) { transition-delay: 0.24s; }
+  .skill-card-item.reveal-element:nth-child(6) { transition-delay: 0.30s; }
+
+  .blog-post-card.reveal-element:nth-child(2) { transition-delay: 0.1s; }
+
+  .contact-info-card.reveal-element:nth-child(2) { transition-delay: 0.08s; }
+  .contact-info-card.reveal-element:nth-child(3) { transition-delay: 0.16s; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-element {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
   }
 }
