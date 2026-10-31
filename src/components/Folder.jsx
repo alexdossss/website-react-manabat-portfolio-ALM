@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import './Folder.css';
 
 const createOffsets = (length) => Array.from({ length }, () => ({ x: 0, y: 0 }));
@@ -36,41 +36,95 @@ const getPaperTransform = (index) => {
 
 const Folder = ({
   color = '#0066ff',
-  size = 1,
   items = [],
   className = '',
   onClick = null,
   isSelected = false,
-  open: controlledOpen = null,
-  isImage = false
+  isImage = false,
+  label = 'Folder'
 }) => {
   const maxItems = 3;
   const papers = useMemo(() => items.slice(0, maxItems), [items]);
-  const [internalOpen, setInternalOpen] = useState(false);
   const [paperOffsets, setPaperOffsets] = useState(() => createOffsets(papers.length));
-  const open = controlledOpen !== null ? controlledOpen : internalOpen;
+  const [revealedCount, setRevealedCount] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const [isReady, setIsReady] = useState(false);
+  const previewTimerRef = useRef(null);
   const activeColor = isSelected ? '#6f9cde' : color;
   const folderBackColor = useMemo(() => darkenColor(activeColor, 0.08), [activeColor]);
   const paper1 = useMemo(() => darkenColor('#ffffff', 0.1), []);
   const paper2 = useMemo(() => darkenColor('#ffffff', 0.05), []);
   const paper3 = '#ffffff';
+  const visibleCount = isSelected
+    ? isReady ? papers.length : 0
+    : isHovered || isFocused ? revealedCount : 0;
+
+  const startPreview = useCallback(() => {
+    if (!papers.length) return;
+
+    window.clearInterval(previewTimerRef.current);
+    setPaperOffsets(createOffsets(papers.length));
+    setRevealedCount(1);
+
+    if (papers.length > 1) {
+      previewTimerRef.current = window.setInterval(() => {
+        setRevealedCount((currentCount) => {
+          if (currentCount >= papers.length) {
+            window.clearInterval(previewTimerRef.current);
+            previewTimerRef.current = null;
+            return currentCount;
+          }
+
+          return currentCount + 1;
+        });
+      }, 500);
+    }
+  }, [papers.length]);
+
+  const stopPreview = useCallback(() => {
+    window.clearInterval(previewTimerRef.current);
+    previewTimerRef.current = null;
+    setRevealedCount(isSelected ? Math.min(1, papers.length) : 0);
+  }, [isSelected, papers.length]);
+
+  const handlePointerEnter = useCallback(() => {
+    setIsHovered(true);
+    startPreview();
+  }, [startPreview]);
+
+  const handlePointerLeave = useCallback((event) => {
+    setIsHovered(false);
+    if (!event.currentTarget.matches(':focus-visible')) setIsFocused(false);
+    if (!event.currentTarget.matches(':focus-visible')) stopPreview();
+  }, [stopPreview]);
+
+  const handleFocus = useCallback(() => {
+    setIsFocused(true);
+    startPreview();
+  }, [startPreview]);
+
+  const handleBlur = useCallback((event) => {
+    setIsFocused(false);
+    if (!isHovered && !event.currentTarget.matches(':hover')) stopPreview();
+  }, [isHovered, stopPreview]);
 
   const handleClick = useCallback(() => {
-    const nextOpen = !open;
+    startPreview();
+    onClick?.(!isSelected);
+  }, [isSelected, onClick, startPreview]);
 
-    if (controlledOpen === null) {
-      setInternalOpen(nextOpen);
-    }
+  useEffect(() => () => {
+    window.clearInterval(previewTimerRef.current);
+  }, []);
 
-    onClick?.(nextOpen);
-
-    if (nextOpen) {
-      setPaperOffsets(createOffsets(papers.length));
-    }
-  }, [controlledOpen, onClick, open, papers.length]);
+  useEffect(() => {
+    const frameId = window.requestAnimationFrame(() => setIsReady(true));
+    return () => window.cancelAnimationFrame(frameId);
+  }, []);
 
   const handlePaperMouseMove = useCallback((event, index) => {
-    if (!open) return;
+    if (index >= revealedCount) return;
 
     const rect = event.currentTarget.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
@@ -83,7 +137,7 @@ const Folder = ({
       nextOffsets[index] = { x: offsetX, y: offsetY };
       return nextOffsets;
     });
-  }, [open]);
+  }, [revealedCount]);
 
   const handlePaperMouseLeave = useCallback((index) => {
     setPaperOffsets((previousOffsets) => {
@@ -101,58 +155,60 @@ const Folder = ({
     '--paper-3': paper3
   }), [activeColor, folderBackColor, paper1, paper2, paper3]);
 
-  const folderClassName = `folder ${open ? 'open' : ''} ${isSelected ? 'selected' : ''}`.trim();
-  const scaleStyle = useMemo(() => ({ transform: `scale(${size})` }), [size]);
-
   return (
-    <div style={scaleStyle} className={className}>
-      <div className={folderClassName} style={folderStyle} onClick={handleClick}>
-        <div className="folder__back">
+    <button
+      type="button"
+      className={`folder ${visibleCount > 0 ? 'previewing' : ''} ${isSelected ? 'selected' : ''} ${className}`.trim()}
+      style={folderStyle}
+      onClick={handleClick}
+      onPointerEnter={handlePointerEnter}
+      onPointerLeave={handlePointerLeave}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      aria-label={`${label} folder`}
+      aria-pressed={isSelected}
+    >
+      <span className="folder__art" aria-hidden="true">
+        <span className="folder__back">
           {papers.map((item, index) => {
             const offset = paperOffsets[index] ?? { x: 0, y: 0 };
+            const isRevealed = index < visibleCount;
+            const image = typeof item === 'string' ? item : item.src;
+            const imageAlt = typeof item === 'string' ? '' : item.alt;
 
             return (
-              <div
+              <span
                 key={`${item}-${index}`}
-                className={`paper paper-${index + 1}`}
+                className={`paper paper-${index + 1} ${isRevealed ? 'is-revealed' : ''}`}
                 onMouseMove={(event) => handlePaperMouseMove(event, index)}
                 onMouseLeave={() => handlePaperMouseLeave(index)}
-                style={
-                  open
-                    ? {
-                        '--magnet-x': `${offset.x}px`,
-                        '--magnet-y': `${offset.y}px`,
-                        transform: getPaperTransform(index)
-                      }
-                    : {}
-                }
+                style={{
+                  '--magnet-x': `${offset.x}px`,
+                  '--magnet-y': `${offset.y}px`,
+                  '--paper-transform': getPaperTransform(index)
+                }}
               >
-                <div className="paper-content" style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  {isImage ? (
-                    <img
-                      src={item}
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                      style={{
-                        maxWidth: '80%',
-                        maxHeight: '80%',
-                        objectFit: 'contain',
-                        pointerEvents: 'none'
-                      }}
-                    />
-                  ) : (
-                    item
-                  )}
-                </div>
-              </div>
+                <span className="paper-content">
+                    {isImage ? (
+                      <img
+                        src={image}
+                        alt={imageAlt}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    ) : (
+                      item
+                    )}
+                </span>
+              </span>
             );
           })}
-          <div className="folder__front"></div>
-          <div className="folder__front right"></div>
-        </div>
-      </div>
-    </div>
+          <span className="folder__front" />
+          <span className="folder__front right" />
+        </span>
+      </span>
+      <span className="folder__label">{label}</span>
+    </button>
   );
 };
 

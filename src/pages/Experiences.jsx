@@ -23,8 +23,16 @@ const Experiences = ({ projects = [], workExp = [], certificates = [] }) => {
   const currentCertificate = useMemo(() => (
     certificates.length > 0 ? certificates[Math.min(currentCertIndex, certificates.length - 1)] : null
   ), [certificates, currentCertIndex]);
-  const certificateLogos = useMemo(() => [...new Set(certificates.map((certificate) => certificate.image))], [certificates]);
-  const workLogos = useMemo(() => workExp.map((experience) => experience.img), [workExp]);
+  const certificateLogos = useMemo(() => (
+    [...new Map(certificates.map((certificate) => [
+      certificate.image,
+      { src: certificate.image, alt: certificate.title }
+    ])).values()]
+  ), [certificates]);
+  const workLogos = useMemo(() => workExp.map((experience) => ({
+    src: experience.img,
+    alt: experience.companyName
+  })), [workExp]);
 
   const handleNext = useCallback(() => {
     if (projectsCount < 2) return;
@@ -160,35 +168,22 @@ const Experiences = ({ projects = [], workExp = [], certificates = [] }) => {
         <div className="folder-layout">
           <div className="folders-column">
             <div className="folders-container">
-              <div
-                className={`folder-item ${currentView === 'work-exp' ? 'selected' : ''}`}
+              <Folder
+                color="#2e77e5"
+                isSelected={currentView === 'work-exp'}
+                items={workLogos}
+                isImage
+                label="Work"
                 onClick={showWorkFolder}
-              >
-                <Folder
-                  color="#2e77e5"
-                  size={1.2}
-                  isSelected={currentView === 'work-exp'}
-                  open={currentView === 'work-exp'}
-                  items={workLogos}
-                  isImage={true}
-                />
-                <p className="folder-label">Work</p>
-              </div>
-
-              <div
-                className={`folder-item ${currentView === 'certificates' ? 'selected' : ''}`}
+              />
+              <Folder
+                color="#2e77e5"
+                isSelected={currentView === 'certificates'}
+                items={certificateLogos}
+                isImage
+                label="Certificates"
                 onClick={showCertificatesFolder}
-              >
-                <Folder
-                  color="#2e77e5"
-                  size={1.2}
-                  isSelected={currentView === 'certificates'}
-                  open={currentView === 'certificates'}
-                  items={certificateLogos}
-                  isImage={true}
-                />
-                <p className="folder-label">Certs</p>
-              </div>
+              />
             </div>
           </div>
 
@@ -234,7 +229,7 @@ const Experiences = ({ projects = [], workExp = [], certificates = [] }) => {
                       <div className="carousel-indicators">
                         {workExp.map((experience, index) => (
                           <button
-                            key={experience.companyName}
+                            key={`${experience.companyName}-${experience.role}-${index}`}
                             className={`carousel-indicator ${index === currentExpIndex ? 'active' : ''}`}
                             onClick={() => setCurrentExpIndex(index)}
                           />

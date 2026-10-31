@@ -51,6 +51,14 @@ const skills = [
 
 const workExperience = [
   {
+    type: "OJT",
+    date: "July 2026 - October 2026",
+    companyName: "A2K Group",
+    img: '/images/a2k_logo.jpg',
+    role: 'Full Stack Developer',
+    description: "During my on-the-job training at A2K Group, I developed a full-stack website for St. Laurence Church using React, TypeScript, and Supabase. I built a responsive, content-managed experience that enables church staff to update site content through an intuitive interface."
+  },
+  {
     type: "Internship",
     date: "May 2024 - June 2024",
     companyName: "A2K Group",
@@ -92,6 +100,14 @@ const codingLanguages = [
   {
     name: 'MySQL',
     img: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg'
+  },
+  {
+    name: 'PostgreSQL',
+    img: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg'
+  },
+  {
+    name: 'Supabase',
+    img: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/supabase/supabase-original.svg'
   },
   {
     name: 'MongoDB',
@@ -187,6 +203,13 @@ const certificates = [
 
 const projects = [
   {
+    name: 'St Laurence Website',
+    stack: ['React JS', 'TypeScript', 'Supabase', 'Iconify', 'shadcn UI'],
+    description: 'Developed a full-stack website for St. Laurence Church as part of my on-the-job training, contributing to a real client project from implementation through deployment. Built with React, TypeScript, and Supabase, the responsive site gives church staff an intuitive way to manage and update content.',
+    img: '/images/projects-cover-photos/st_laurence.png',
+    url: 'https://st-laurence-landing.onrender.com'
+  },
+  {
     name: 'PURESTRENGTH LABS',
     stack: ['HTML', 'CSS', 'JavaScript'],
     description: 'GitHub-hosted website that provides detailed information on workout supplements, including protein and creatine. It allows users to compare nutritional content and make informed decisions to support their fitness goals.',
@@ -252,4 +275,3 @@ const App = () => {
 }
 
 export default React.memo(App);
-

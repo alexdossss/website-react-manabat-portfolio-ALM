@@ -58,7 +58,16 @@ const About = ({ codingLanguages, skills }) => {
         <div className='about-me-content'>
             <div className="about-me-main-flex">
                 <div className='lanyard-column'>
-                    <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} />
+                    <Lanyard
+                        frontImage="/images/manabat_full_body.jpg"
+                        backImage="/images/easter_egg.jpg"
+                        strapImage="/images/manabat-lanyard.svg"
+                        strapColor="#0b3d91"
+                        strapWidth={0.9}
+                        size={0.8}
+                        strapLength={0.2}
+                        metal="silver"
+                    />
                 </div>
 
                 <div className='about-me-inner-contents'>
